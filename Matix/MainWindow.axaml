@@ -1,9 +1,132 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+        xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+        xmlns:local="clr-namespace:Matix"
         x:Class="Matix.MainWindow"
-        Title="Matix">
-    Welcome to Avalonia!
+        x:DataType="local:MainWindowViewModel"
+        Title="Matix Player"
+        Width="1000" Height="700"
+        Background="#D1C4E9"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Styles>
+        <Style Selector="Button.rippleBtn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#6750A4"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <!-- Top Left Settings Button -->
+        <controls:Card Width="56" Height="56" Margin="24" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                     CornerRadius="16" Padding="0" Background="#EADDFF">
+            <Button Classes="rippleBtn" Width="56" Height="56" CornerRadius="16">
+                <materialIcons:MaterialIcon Kind="Cog" Width="28" Height="28"/>
+            </Button>
+        </controls:Card>
+
+        <!-- Main Content -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="24" Margin="0,0,0,60">
+            <!-- Album Art Squircle -->
+            <controls:Card Width="360" Height="360" CornerRadius="100" Padding="0" Background="#6750A4">
+                <materialIcons:MaterialIcon Kind="MusicNote" Width="180" Height="180" Foreground="#EADDFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </controls:Card>
+            
+            <!-- Title -->
+            <TextBlock Text="Song - example" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       Foreground="#6750A4" 
+                       HorizontalAlignment="Center"
+                       Margin="0, 10, 0, 0"/>
+                       
+            <!-- Progress Bar Section -->
+            <Grid ColumnDefinitions="Auto, *, Auto" Margin="0, 20, 0, 0" Width="640">
+                <TextBlock Grid.Column="0" Text="{Binding CurrentTimeString}" FontSize="14" Foreground="#6750A4" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,16,0"/>
+                
+                <Grid Grid.Column="1" Height="34" Width="550" VerticalAlignment="Center" Background="Transparent"
+                      PointerPressed="ProgressGrid_PointerPressed" PointerMoved="ProgressGrid_PointerMoved">
+                    <Border Height="18" CornerRadius="9" Background="#EADDFF" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
+                    <Ellipse Width="4" Height="4" Fill="#6750A4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.5" IsHitTestVisible="False"/>
+                    <Border Height="18" CornerRadius="9,0,0,9" Background="#6750A4" HorizontalAlignment="Left" Width="{Binding ProgressWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                    <Border Width="4" Height="34" Background="#6750A4" CornerRadius="2" HorizontalAlignment="Left" Margin="{Binding ProgressThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                </Grid>
+                
+                <TextBlock Grid.Column="2" Text="{Binding TotalTimeString}" FontSize="14" Foreground="#6750A4" VerticalAlignment="Center" FontWeight="SemiBold" Margin="16,0,0,0"/>
+            </Grid>
+        </StackPanel>
+
+        <!-- Bottom Controls -->
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50" Width="800">
+            <Grid ColumnDefinitions="*, Auto, *">
+                
+                <!-- Center buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
+                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="#EADDFF">
+                        <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16">
+                            <materialIcons:MaterialIcon Kind="ArrowURightTop" Width="20" Height="20"/>
+                        </Button>
+                    </controls:Card>
+                    
+                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="#EADDFF">
+                        <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding PrevCommand}">
+                            <materialIcons:MaterialIcon Kind="SkipPrevious" Width="20" Height="20"/>
+                        </Button>
+                    </controls:Card>
+                    
+                    <controls:Card Width="64" Height="64" CornerRadius="20" Padding="0" Background="#EADDFF">
+                        <Button Classes="rippleBtn" Width="64" Height="64" CornerRadius="20" Command="{Binding PlayPauseCommand}">
+                            <materialIcons:MaterialIcon Kind="{Binding PlayIcon}" Width="24" Height="24"/>
+                        </Button>
+                    </controls:Card>
+                    
+                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="#EADDFF">
+                        <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding NextCommand}">
+                            <materialIcons:MaterialIcon Kind="SkipNext" Width="20" Height="20"/>
+                        </Button>
+                    </controls:Card>
+                </StackPanel>
+
+                <!-- Right Side Stuff (Volume + Exit) -->
+                <Grid Grid.Column="2" HorizontalAlignment="Stretch">
+                    
+                    <!-- Volume section -->
+                    <Grid HorizontalAlignment="Left" Margin="50,0,0,0" Width="120" VerticalAlignment="Center">
+                        
+                        <Grid Width="120" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent"
+                              PointerPressed="VolumeGrid_PointerPressed" PointerMoved="VolumeGrid_PointerMoved">
+                            <Border Height="12" CornerRadius="6" Background="#EADDFF" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
+                            <Border Height="12" CornerRadius="6,0,0,6" Background="#6750A4" HorizontalAlignment="Left" Width="{Binding VolumeWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                            <Ellipse Width="3" Height="3" Fill="#6750A4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0" Opacity="0.5" IsHitTestVisible="False"/>
+                            <Border Width="4" Height="30" Background="#6750A4" CornerRadius="2" HorizontalAlignment="Left" Margin="{Binding VolumeThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        </Grid>
+
+                        <Canvas HorizontalAlignment="Left" Margin="{Binding VolumeBadgeMargin}" Width="1" Height="1" VerticalAlignment="Center">
+                            <Grid Canvas.Left="-18" Canvas.Top="-38" Width="36" Height="36">
+                                <Border Background="#6750A4" CornerRadius="4" Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Border Background="#6750A4" CornerRadius="4" Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="50%,50%">
+                                    <Border.RenderTransform>
+                                        <RotateTransform Angle="45"/>
+                                    </Border.RenderTransform>
+                                </Border>
+                                <TextBlock Text="{Binding VolumeText}" Foreground="#EADDFF" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Canvas>
+                    </Grid>
+                    
+                    <!-- Exit button aligned right -->
+                    <controls:Card HorizontalAlignment="Right" Width="52" Height="52" CornerRadius="16" Padding="0" Background="#EADDFF">
+                        <Button Classes="rippleBtn" Width="52" Height="52" CornerRadius="16">
+                            <materialIcons:MaterialIcon Kind="Logout" Width="26" Height="26"/>
+                        </Button>
+                    </controls:Card>
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Grid>
 </Window>
