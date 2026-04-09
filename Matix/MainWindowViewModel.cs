@@ -1,9 +1,11 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Threading;
+using NAudio.Wave;
 
 namespace Matix
 {
@@ -34,6 +36,11 @@ namespace Matix
                 OnPropertyChanged(nameof(CurrentTimeString));
                 OnPropertyChanged(nameof(ProgressWidth));
                 OnPropertyChanged(nameof(ProgressThumbMargin));
+                
+                if (_audioFile != null && Math.Abs(_audioFile.CurrentTime.TotalSeconds - value.TotalSeconds) > 0.5)
+                {
+                    _audioFile.CurrentTime = value;
+                }
             } 
         }
 
@@ -66,6 +73,10 @@ namespace Matix
                 OnPropertyChanged(nameof(VolumeWidth));
                 OnPropertyChanged(nameof(VolumeThumbMargin));
                 OnPropertyChanged(nameof(VolumeBadgeMargin));
+                if (_waveOut != null)
+                {
+                    _waveOut.Volume = (float)(_volume / 100.0);
+                }
             }
         }
         public string VolumeText => Math.Round(Volume).ToString();
@@ -73,32 +84,90 @@ namespace Matix
         public Thickness VolumeThumbMargin => new Thickness(Math.Max(0, VolumeWidth - 2), 0, 0, 0);
         public Thickness VolumeBadgeMargin => new Thickness(VolumeWidth, 0, 0, 0);
 
+        private bool _isSettingsOpen;
+        public bool IsSettingsOpen
+        {
+            get => _isSettingsOpen;
+            set { _isSettingsOpen = value; OnPropertyChanged(); }
+        }
+
+        private bool _isAboutVisible;
+        public bool IsAboutVisible
+        {
+            get => _isAboutVisible;
+            set { _isAboutVisible = value; OnPropertyChanged(); }
+        }
+
         public ICommand PlayPauseCommand { get; }
         public ICommand NextCommand { get; }
         public ICommand PrevCommand { get; }
+        public ICommand ToggleSettingsCommand { get; }
+        public ICommand ShowAboutCommand { get; }
+        public ICommand CloseAboutCommand { get; }
+        public ICommand OpenGitHubCommand { get; }
 
         private DispatcherTimer _timer;
+
+        private WaveOutEvent? _waveOut;
+        private AudioFileReader? _audioFile;
+
+        public void LoadAudio(string filePath)
+        {
+            _waveOut?.Stop();
+            _waveOut?.Dispose();
+            _audioFile?.Dispose();
+
+            try
+            {
+                _audioFile = new AudioFileReader(filePath);
+                _waveOut = new WaveOutEvent();
+                _waveOut.Init(_audioFile);
+                _waveOut.Volume = (float)(Volume / 100.0);
+                
+                TotalTime = _audioFile.TotalTime;
+                CurrentTime = TimeSpan.Zero;
+                IsPlaying = false;
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         public MainWindowViewModel()
         {
             PlayPauseCommand = new RelayCommand(TogglePlay);
             NextCommand = new RelayCommand(NextTrack);
             PrevCommand = new RelayCommand(PrevTrack);
+            ToggleSettingsCommand = new RelayCommand(() => IsSettingsOpen = !IsSettingsOpen);
+            ShowAboutCommand = new RelayCommand(() => { IsSettingsOpen = false; IsAboutVisible = true; });
+            CloseAboutCommand = new RelayCommand(() => IsAboutVisible = false);
+            OpenGitHubCommand = new RelayCommand(() =>
+            {
+                try
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "https://github.com/gllsss69/Matix",
+                        UseShellExecute = true
+                    });
+                }
+                catch { }
+            });
 
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromMilliseconds(200)
             };
             _timer.Tick += (s, e) =>
             {
-                if (IsPlaying)
+                if (IsPlaying && _audioFile != null)
                 {
-                    if (CurrentTime < TotalTime)
-                        CurrentTime = CurrentTime.Add(TimeSpan.FromSeconds(1));
-                    else
+                    CurrentTime = _audioFile.CurrentTime;
+                    if (_waveOut != null && _waveOut.PlaybackState == PlaybackState.Stopped)
                     {
                         IsPlaying = false;
                         CurrentTime = TimeSpan.Zero;
+                        _audioFile.Position = 0;
                     }
                 }
             };
@@ -106,9 +175,19 @@ namespace Matix
 
         private void TogglePlay()
         {
+            if (_waveOut == null) return;
+
             IsPlaying = !IsPlaying;
-            if (IsPlaying) _timer.Start();
-            else _timer.Stop();
+            if (IsPlaying)
+            {
+                _waveOut.Play();
+                _timer.Start();
+            }
+            else 
+            {
+                _waveOut.Pause();
+                _timer.Stop();
+            }
         }
 
         private void NextTrack()
