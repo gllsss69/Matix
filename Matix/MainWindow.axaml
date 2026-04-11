@@ -6,6 +6,7 @@
         x:DataType="vm:AppViewModel"
         Title="Matix Player"
         Width="1000" Height="700"
+        MinWidth="800" MinHeight="660"
         Background="#D1C4E9"
         WindowStartupLocation="CenterScreen">
 

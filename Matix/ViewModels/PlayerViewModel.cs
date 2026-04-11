@@ -59,7 +59,7 @@ namespace Matix.ViewModels
             }
         }
 
-        private TimeSpan _totalTime = TimeSpan.FromMinutes(3);
+        private TimeSpan _totalTime = TimeSpan.Zero;
         public TimeSpan TotalTime
         {
             get => _totalTime;
@@ -69,11 +69,35 @@ namespace Matix.ViewModels
         public string CurrentTimeString => $"{(int)CurrentTime.TotalMinutes}:{CurrentTime.Seconds:D2}";
         public string TotalTimeString => $"{(int)TotalTime.TotalMinutes}:{TotalTime.Seconds:D2}";
 
-        // Progress bar pixel widths
-        public const double MaxProgressWidth = 550.0;
-        public const double MaxVolumeWidth   = 120.0;
+        // Progress bar pixel widths — updated by the view via SizeChanged
+        private double _maxProgressWidth = 550.0;
+        public double MaxProgressWidth
+        {
+            get => _maxProgressWidth;
+            set
+            {
+                if (Math.Abs(_maxProgressWidth - value) < 0.5) return;
+                _maxProgressWidth = value;
+                OnPropertyChanged(nameof(ProgressWidth));
+                OnPropertyChanged(nameof(ProgressThumbMargin));
+            }
+        }
 
-        public double  ProgressWidth => TotalTime.TotalSeconds == 0 ? 0
+        private double _maxVolumeWidth = 120.0;
+        public double MaxVolumeWidth
+        {
+            get => _maxVolumeWidth;
+            set
+            {
+                if (Math.Abs(_maxVolumeWidth - value) < 0.5) return;
+                _maxVolumeWidth = value;
+                OnPropertyChanged(nameof(VolumeWidth));
+                OnPropertyChanged(nameof(VolumeThumbMargin));
+                OnPropertyChanged(nameof(VolumeBadgeMargin));
+            }
+        }
+
+        public double ProgressWidth => TotalTime.TotalSeconds == 0 ? 0
             : Math.Clamp((CurrentTime.TotalSeconds / TotalTime.TotalSeconds) * MaxProgressWidth, 0, MaxProgressWidth);
         public Thickness ProgressThumbMargin => new(ProgressWidth, 0, 0, 0);
 
@@ -93,10 +117,10 @@ namespace Matix.ViewModels
                 if (_waveOut != null) _waveOut.Volume = (float)(_volume / 100.0);
             }
         }
-        public string VolumeText => Math.Round(Volume).ToString();
-        public double VolumeWidth => (Volume / 100.0) * MaxVolumeWidth;
-        public Thickness VolumeThumbMargin => new(Math.Max(0, VolumeWidth - 2), 0, 0, 0);
-        public Thickness VolumeBadgeMargin => new(VolumeWidth, 0, 0, 0);
+        public string    VolumeText        => Math.Round(Volume).ToString();
+        public double    VolumeWidth        => (Volume / 100.0) * MaxVolumeWidth;
+        public Thickness VolumeThumbMargin  => new(Math.Max(0, VolumeWidth - 2), 0, 0, 0);
+        public Thickness VolumeBadgeMargin  => new(VolumeWidth, 0, 0, 0);
 
         // Commands
         public ICommand PlayPauseCommand { get; }

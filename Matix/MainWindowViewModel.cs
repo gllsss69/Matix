@@ -44,7 +44,7 @@ namespace Matix
             } 
         }
 
-        private TimeSpan _totalTime = TimeSpan.FromMinutes(3);
+        private TimeSpan _totalTime = TimeSpan.Zero;
         public TimeSpan TotalTime
         {
             get => _totalTime;

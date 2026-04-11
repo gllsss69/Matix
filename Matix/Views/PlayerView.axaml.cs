@@ -50,7 +50,7 @@ namespace Matix.Views
             var point = e.GetCurrentPoint(relativeTo);
             if (point.Properties.IsLeftButtonPressed)
             {
-                double ratio = Math.Clamp(point.Position.X / PlayerViewModel.MaxProgressWidth, 0, 1);
+                double ratio = Math.Clamp(point.Position.X / vm.MaxProgressWidth, 0, 1);
                 vm.CurrentTime = TimeSpan.FromSeconds(vm.TotalTime.TotalSeconds * ratio);
             }
         }
@@ -66,7 +66,7 @@ namespace Matix.Views
             var point = e.GetCurrentPoint(relativeTo);
             if (point.Properties.IsLeftButtonPressed)
             {
-                double ratio = Math.Clamp(point.Position.X / PlayerViewModel.MaxVolumeWidth, 0, 1);
+                double ratio = Math.Clamp(point.Position.X / vm.MaxVolumeWidth, 0, 1);
                 vm.Volume = ratio * 100;
             }
         }
@@ -75,5 +75,17 @@ namespace Matix.Views
             => UpdateVolume(e, (Visual)sender!);
         private void VolumeGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
             => UpdateVolume(e, (Visual)sender!);
+
+        private void ProgressTrackGrid_SizeChanged(object? sender, SizeChangedEventArgs e)
+        {
+            if (VM is { } vm && e.NewSize.Width > 0)
+                vm.MaxProgressWidth = e.NewSize.Width;
+        }
+
+        private void VolumeTrackGrid_SizeChanged(object? sender, SizeChangedEventArgs e)
+        {
+            if (VM is { } vm && e.NewSize.Width > 0)
+                vm.MaxVolumeWidth = e.NewSize.Width;
+        }
     }
 }
