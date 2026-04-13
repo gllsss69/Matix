@@ -6,34 +6,11 @@
              x:Class="Matix.Views.PlayerView"
              x:DataType="vm:PlayerViewModel">
 
-    <UserControl.Styles>
-        <Style Selector="Button.rippleBtn">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#6750A4"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-        <Style Selector="Button.settingsItemBtn">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="Margin" Value="8,2"/>
-        </Style>
-        <Style Selector="Button.settingsItemBtn /template/ ContentPresenter">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="BoxShadow" Value="none"/>
-        </Style>
-    </UserControl.Styles>
 
     <Grid RowDefinitions="80,*,Auto,Auto">
         <!-- Top Left Settings Button -->
         <controls:Card Grid.RowSpan="4" Width="56" Height="56" Margin="24" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       CornerRadius="16" Padding="0" Background="#EADDFF" ZIndex="10">
+                       CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}" ZIndex="10">
             <Button Classes="rippleBtn" Width="56" Height="56" CornerRadius="16" Command="{Binding ToggleSettingsCommand}">
                 <materialIcons:MaterialIcon Kind="Cog" Width="28" Height="28"/>
             </Button>
@@ -41,7 +18,7 @@
 
         <!-- Top Right Open File Button -->
         <controls:Card Grid.RowSpan="4" Width="56" Height="56" Margin="24" HorizontalAlignment="Right" VerticalAlignment="Top"
-                       CornerRadius="16" Padding="0" Background="#EADDFF" ZIndex="10">
+                       CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}" ZIndex="10">
             <Button Classes="rippleBtn" Width="56" Height="56" CornerRadius="16" Click="OpenFileButton_Click">
                 <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="28" Height="28"/>
             </Button>
@@ -55,30 +32,30 @@
         <!-- Settings Popup Menu -->
         <controls:Card Grid.RowSpan="4" IsVisible="{Binding IsSettingsOpen}" ZIndex="10"
                        Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Margin="100,24,0,0" CornerRadius="16" Padding="0,10" Background="#EADDFF">
+                       Margin="100,24,0,0" CornerRadius="16" Padding="0,10" Background="{DynamicResource PrimaryContainer}">
             <StackPanel HorizontalAlignment="Stretch">
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToThemeCommand}">
                     <Grid ColumnDefinitions="Auto,*">
-                        <materialIcons:MaterialIcon Grid.Column="0" Kind="PaletteOutline" Width="20" Height="20" Foreground="#6750A4"/>
-                        <TextBlock Grid.Column="1" Text="Theme" Margin="12,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14" Foreground="#6750A4"/>
+                        <materialIcons:MaterialIcon Grid.Column="0" Kind="PaletteOutline" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
+                        <TextBlock Grid.Column="1" Text="Theme" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToQualityCommand}">
                     <Grid ColumnDefinitions="Auto,*">
-                        <materialIcons:MaterialIcon Grid.Column="0" Kind="Equalizer" Width="20" Height="20" Foreground="#6750A4"/>
-                        <TextBlock Grid.Column="1" Text="Quality" Margin="12,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14" Foreground="#6750A4"/>
+                        <materialIcons:MaterialIcon Grid.Column="0" Kind="Equalizer" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
+                        <TextBlock Grid.Column="1" Text="Quality" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToLanguageCommand}">
                     <Grid ColumnDefinitions="Auto,*">
-                        <materialIcons:MaterialIcon Grid.Column="0" Kind="Translate" Width="20" Height="20" Foreground="#6750A4"/>
-                        <TextBlock Grid.Column="1" Text="Language" Margin="12,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14" Foreground="#6750A4"/>
+                        <materialIcons:MaterialIcon Grid.Column="0" Kind="Translate" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
+                        <TextBlock Grid.Column="1" Text="Language" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToAboutCommand}">
                     <Grid ColumnDefinitions="Auto,*">
-                        <materialIcons:MaterialIcon Grid.Column="0" Kind="InformationOutline" Width="20" Height="20" Foreground="#6750A4"/>
-                        <TextBlock Grid.Column="1" Text="About" Margin="12,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="14" Foreground="#6750A4"/>
+                        <materialIcons:MaterialIcon Grid.Column="0" Kind="InformationOutline" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
+                        <TextBlock Grid.Column="1" Text="About" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
             </StackPanel>
@@ -88,39 +65,39 @@
         <StackPanel Grid.Row="1" VerticalAlignment="Center" Spacing="24" Margin="60,0,60,0">
 
             <!-- Album Art Squircle -->
-            <controls:Card Width="320" Height="320" HorizontalAlignment="Center" CornerRadius="90" Padding="0" Background="#6750A4">
-                <materialIcons:MaterialIcon Kind="MusicNote" Width="160" Height="160" Foreground="#EADDFF"
+            <controls:Card Width="320" Height="320" HorizontalAlignment="Center" CornerRadius="90" Padding="0" Background="{DynamicResource PrimaryColor}">
+                <materialIcons:MaterialIcon Kind="MusicNote" Width="160" Height="160" Foreground="{DynamicResource PrimaryContainer}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </controls:Card>
 
             <!-- Song Title -->
             <TextBlock Text="{Binding SongTitle}"
-                       FontSize="24" FontWeight="Bold" Foreground="#6750A4"
+                       Classes="Title"
                        HorizontalAlignment="Center"/>
         </StackPanel>
 
         <!-- Progress Bar (Row 2 — closer to buttons) -->
         <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="80,0,80,0">
             <TextBlock Grid.Column="0" Text="{Binding CurrentTimeString}"
-                       FontSize="14" Foreground="#6750A4" VerticalAlignment="Center"
-                       FontWeight="SemiBold" Margin="0,0,16,0"/>
+                       Classes="Subtitle" VerticalAlignment="Center"
+                       Margin="0,0,16,0"/>
 
             <Grid x:Name="ProgressTrackGrid" Grid.Column="1" Height="34" VerticalAlignment="Center" Background="Transparent"
                   PointerPressed="ProgressGrid_PointerPressed" PointerMoved="ProgressGrid_PointerMoved"
                   SizeChanged="ProgressTrackGrid_SizeChanged">
-                <Border Height="18" CornerRadius="9" Background="#EADDFF"
+                <Border Height="18" CornerRadius="9" Background="{DynamicResource PrimaryContainer}"
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
-                <Ellipse Width="4" Height="4" Fill="#6750A4" HorizontalAlignment="Right"
+                <Ellipse Width="4" Height="4" Fill="{DynamicResource PrimaryColor}" HorizontalAlignment="Right"
                          VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.5" IsHitTestVisible="False"/>
-                <Border Height="18" CornerRadius="9,0,0,9" Background="#6750A4" HorizontalAlignment="Left"
+                <Border Height="18" CornerRadius="9,0,0,9" Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Left"
                         Width="{Binding ProgressWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                <Border Width="4" Height="34" Background="#6750A4" CornerRadius="2" HorizontalAlignment="Left"
+                <Border Width="4" Height="34" Background="{DynamicResource PrimaryColor}" CornerRadius="2" HorizontalAlignment="Left"
                         Margin="{Binding ProgressThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
             </Grid>
 
             <TextBlock Grid.Column="2" Text="{Binding TotalTimeString}"
-                       FontSize="14" Foreground="#6750A4" VerticalAlignment="Center"
-                       FontWeight="SemiBold" Margin="16,0,0,0"/>
+                       Classes="Subtitle" VerticalAlignment="Center"
+                       Margin="16,0,0,0"/>
         </Grid>
 
         <!-- Bottom Controls (Row 3) -->
@@ -129,25 +106,25 @@
 
                 <!-- Center playback buttons -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
-                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="#EADDFF">
+                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
                         <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16">
                             <materialIcons:MaterialIcon Kind="ArrowURightTop" Width="20" Height="20"/>
                         </Button>
                     </controls:Card>
 
-                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="#EADDFF">
+                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
                         <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding PrevCommand}">
                             <materialIcons:MaterialIcon Kind="SkipPrevious" Width="20" Height="20"/>
                         </Button>
                     </controls:Card>
 
-                    <controls:Card Width="64" Height="64" CornerRadius="20" Padding="0" Background="#EADDFF">
+                    <controls:Card Width="64" Height="64" CornerRadius="20" Padding="0" Background="{DynamicResource PrimaryContainer}">
                         <Button Classes="rippleBtn" Width="64" Height="64" CornerRadius="20" Command="{Binding PlayPauseCommand}">
                             <materialIcons:MaterialIcon Kind="{Binding PlayIcon}" Width="24" Height="24"/>
                         </Button>
                     </controls:Card>
 
-                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="#EADDFF">
+                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
                         <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding NextCommand}">
                             <materialIcons:MaterialIcon Kind="SkipNext" Width="20" Height="20"/>
                         </Button>
@@ -162,28 +139,28 @@
                         <Grid x:Name="VolumeTrackGrid" Width="120" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent"
                               PointerPressed="VolumeGrid_PointerPressed" PointerMoved="VolumeGrid_PointerMoved"
                               SizeChanged="VolumeTrackGrid_SizeChanged">
-                            <Border Height="12" CornerRadius="6" Background="#EADDFF"
+                            <Border Height="12" CornerRadius="6" Background="{DynamicResource PrimaryContainer}"
                                     VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
-                            <Border Height="12" CornerRadius="6,0,0,6" Background="#6750A4" HorizontalAlignment="Left"
+                            <Border Height="12" CornerRadius="6,0,0,6" Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Left"
                                     Width="{Binding VolumeWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                            <Ellipse Width="3" Height="3" Fill="#6750A4" HorizontalAlignment="Right"
+                            <Ellipse Width="3" Height="3" Fill="{DynamicResource PrimaryColor}" HorizontalAlignment="Right"
                                      VerticalAlignment="Center" Margin="0,0,6,0" Opacity="0.5" IsHitTestVisible="False"/>
-                            <Border Width="4" Height="30" Background="#6750A4" CornerRadius="2" HorizontalAlignment="Left"
+                            <Border Width="4" Height="30" Background="{DynamicResource PrimaryColor}" CornerRadius="2" HorizontalAlignment="Left"
                                     Margin="{Binding VolumeThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
                         </Grid>
 
                         <Canvas HorizontalAlignment="Left" Margin="{Binding VolumeBadgeMargin}" Width="1" Height="1" VerticalAlignment="Center">
                             <Grid Canvas.Left="-18" Canvas.Top="-38" Width="36" Height="36">
-                                <Border Background="#6750A4" CornerRadius="4" Width="26" Height="26"
+                                <Border Background="{DynamicResource PrimaryColor}" CornerRadius="4" Width="26" Height="26"
                                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Border Background="#6750A4" CornerRadius="4" Width="26" Height="26"
+                                <Border Background="{DynamicResource PrimaryColor}" CornerRadius="4" Width="26" Height="26"
                                         HorizontalAlignment="Center" VerticalAlignment="Center"
                                         RenderTransformOrigin="50%,50%">
                                     <Border.RenderTransform>
                                         <RotateTransform Angle="45"/>
                                     </Border.RenderTransform>
                                 </Border>
-                                <TextBlock Text="{Binding VolumeText}" Foreground="#EADDFF"
+                                <TextBlock Text="{Binding VolumeText}" Foreground="{DynamicResource PrimaryContainer}"
                                            FontSize="11" FontWeight="Bold"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Grid>

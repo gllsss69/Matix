@@ -5,28 +5,31 @@ namespace Matix.ViewModels
 {
     public class ThemeViewModel : ViewModelBase
     {
-        private string _selectedTheme = "Purple (Default)";
+        private string _selectedTheme;
 
         public string[] Themes { get; } =
         {
-            "Purple (Default)",
-            "Indigo",
-            "Blue",
-            "Teal",
-            "Green",
+            "Light",
             "Dark",
         };
 
         public string SelectedTheme
         {
             get => _selectedTheme;
-            set { SetField(ref _selectedTheme, value); }
+            set 
+            { 
+                if (SetField(ref _selectedTheme, value))
+                {
+                    App.ApplyTheme(value);
+                }
+            }
         }
 
         public ICommand GoBackCommand { get; }
 
         public ThemeViewModel(System.Action goBack)
         {
+            _selectedTheme = App.Settings.Theme;
             GoBackCommand = new RelayCommand(goBack);
         }
     }

@@ -5,57 +5,48 @@
              xmlns:vm="clr-namespace:Matix.ViewModels"
              x:Class="Matix.Views.AboutView"
              x:DataType="vm:AboutViewModel"
-             Background="#F3EDF7">
-
-    <UserControl.Styles>
-        <Style Selector="Button.rippleBtn">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#6750A4"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-    </UserControl.Styles>
+             Background="{DynamicResource AppBackground}">
 
     <Grid>
         <!-- Top App Bar -->
         <Grid Height="64" VerticalAlignment="Top">
             <controls:Card Width="48" Height="48" CornerRadius="24" Padding="0"
-                           Background="#EADDFF" HorizontalAlignment="Left" Margin="16,8">
+                           Background="{DynamicResource PrimaryContainer}" HorizontalAlignment="Left" Margin="16,8">
                 <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="24"
                         Command="{Binding GoBackCommand}">
-                    <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="#6750A4"/>
+                    <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="{DynamicResource PrimaryColor}"/>
                 </Button>
             </controls:Card>
-            <TextBlock Text="About" FontSize="22" FontWeight="SemiBold" Foreground="#1D1B20"
+            <TextBlock Text="About" Classes="Title"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
         <!-- About Content -->
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
             <controls:Card Width="120" Height="120" CornerRadius="40" Padding="0"
-                           Background="#6750A4" HorizontalAlignment="Center" Margin="0,0,0,16">
-                <materialIcons:MaterialIcon Kind="MusicNote" Width="60" Height="60" Foreground="#EADDFF"
+                           Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Center" Margin="0,0,0,16">
+                <materialIcons:MaterialIcon Kind="MusicNote" Width="60" Height="60" Foreground="{DynamicResource PrimaryContainer}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </controls:Card>
 
-            <TextBlock Text="{Binding AppName}" FontSize="32" FontWeight="Bold"
-                       Foreground="#6750A4" HorizontalAlignment="Center"/>
-            <TextBlock Text="{Binding Version}" FontSize="16" Foreground="#49454F"
+            <TextBlock Text="{Binding AppName}" Classes="Title" FontSize="32"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding Version}" Classes="Subtitle"
                        HorizontalAlignment="Center"/>
 
-            <TextBlock Text="{Binding Description}" FontSize="16" Foreground="#49454F"
+            <TextBlock Text="{Binding Description}" Classes="Body"
                        HorizontalAlignment="Center" Margin="0,16,0,0"/>
-            <TextBlock Text="{Binding Tech}" FontSize="16" Foreground="#49454F"
+            <TextBlock Text="{Binding Tech}" Classes="Body"
                        HorizontalAlignment="Center"/>
 
-            <controls:Card CornerRadius="16" Padding="0" Background="#EADDFF"
+            <controls:Card CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}"
                            HorizontalAlignment="Center" Margin="0,32,0,0">
                 <Button Classes="rippleBtn" Height="48" CornerRadius="16" Padding="24,0"
                         Command="{Binding OpenGitHubCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <materialIcons:MaterialIcon Kind="Github" Width="20" Height="20" Foreground="#6750A4"/>
+                        <materialIcons:MaterialIcon Kind="Github" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
                         <TextBlock Text="GitHub Repository" VerticalAlignment="Center"
-                                   FontWeight="SemiBold" Foreground="#6750A4"/>
+                                   Classes="Subtitle"/>
                     </StackPanel>
                 </Button>
             </controls:Card>

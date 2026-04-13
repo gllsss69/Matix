@@ -1,0 +1,68 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Styles.Resources>
+        <!-- Typography -->
+        <FontFamily x:Key="MainFontFamily">Roboto, Inter, Segoe UI, sans-serif</FontFamily>
+    </Styles.Resources>
+    
+    <Style Selector="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource MainFontFamily}"/>
+    </Style>
+
+    <!-- Specific Text Styles -->
+    <Style Selector="TextBlock.Title">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.Subtitle">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
+    </Style>
+
+    <Style Selector="TextBlock.Body">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForeground}"/>
+    </Style>
+
+    <!-- Button Styles -->
+    <Style Selector="Button.rippleBtn">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style Selector="Button.settingsItemBtn">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="8,2"/>
+    </Style>
+
+    <Style Selector="Button.settingsItemBtn /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="BoxShadow" Value="none"/>
+    </Style>
+
+    <!-- TextBox and ListBox basic styles -->
+    <Style Selector="TextBox">
+        <Setter Property="FontFamily" Value="{StaticResource MainFontFamily}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="MinWidth" Value="200"/>
+    </Style>
+
+    <Style Selector="ListBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+</Styles>
