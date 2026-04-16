@@ -27,6 +27,13 @@ namespace Matix.ViewModels
         }
 
         // Playback
+        private bool _isRepeatEnabled;
+        public bool IsRepeatEnabled
+        {
+            get => _isRepeatEnabled;
+            set => SetField(ref _isRepeatEnabled, value);
+        }
+
         private bool _isPlaying;
         public bool IsPlaying
         {
@@ -126,6 +133,7 @@ namespace Matix.ViewModels
         public ICommand PlayPauseCommand { get; }
         public ICommand NextCommand { get; }
         public ICommand PrevCommand { get; }
+        public ICommand ToggleRepeatCommand { get; }
 
         // NAudio
         private WaveOutEvent? _waveOut;
@@ -141,6 +149,7 @@ namespace Matix.ViewModels
             PlayPauseCommand = new RelayCommand(TogglePlay);
             NextCommand = new RelayCommand(NextTrack);
             PrevCommand = new RelayCommand(PrevTrack);
+            ToggleRepeatCommand = new RelayCommand(() => IsRepeatEnabled = !IsRepeatEnabled);
 
             // Settings menu navigation
             ToggleSettingsCommand = new RelayCommand(() => IsSettingsOpen = !IsSettingsOpen);
@@ -158,9 +167,18 @@ namespace Matix.ViewModels
                     CurrentTime = _audioFile.CurrentTime;
                     if (_waveOut?.PlaybackState == PlaybackState.Stopped)
                     {
-                        IsPlaying = false;
-                        CurrentTime = TimeSpan.Zero;
-                        _audioFile.Position = 0;
+                        if (IsRepeatEnabled)
+                        {
+                            _audioFile.Position = 0;
+                            CurrentTime = TimeSpan.Zero;
+                            _waveOut.Play();
+                        }
+                        else
+                        {
+                            IsPlaying = false;
+                            CurrentTime = TimeSpan.Zero;
+                            _audioFile.Position = 0;
+                        }
                     }
                 }
             };

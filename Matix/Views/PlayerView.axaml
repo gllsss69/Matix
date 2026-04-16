@@ -6,6 +6,17 @@
              x:Class="Matix.Views.PlayerView"
              x:DataType="vm:PlayerViewModel">
 
+    <UserControl.Styles>
+        <Style Selector="controls|Card.repeatBtn">
+            <Setter Property="Background" Value="{DynamicResource PrimaryContainer}"/>
+        </Style>
+        <Style Selector="controls|Card.repeatBtn.repeatActive">
+            <Setter Property="Background" Value="{DynamicResource PrimaryColor}"/>
+        </Style>
+        <Style Selector="controls|Card.repeatBtn.repeatActive materialIcons|MaterialIcon">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryContainer}"/>
+        </Style>
+    </UserControl.Styles>
 
     <Grid RowDefinitions="80,*,Auto,Auto">
         <!-- Top Left Settings Button -->
@@ -106,8 +117,8 @@
 
                 <!-- Center playback buttons -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
-                    <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
-                        <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16">
+                    <controls:Card Classes="repeatBtn" Classes.repeatActive="{Binding IsRepeatEnabled}" Width="48" Height="48" CornerRadius="16" Padding="0">
+                        <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding ToggleRepeatCommand}">
                             <materialIcons:MaterialIcon Kind="ArrowURightTop" Width="20" Height="20"/>
                         </Button>
                     </controls:Card>
