@@ -77,14 +77,23 @@
 
             <!-- Album Art Squircle -->
             <controls:Card Width="320" Height="320" HorizontalAlignment="Center" CornerRadius="90" Padding="0" Background="{DynamicResource PrimaryColor}">
-                <materialIcons:MaterialIcon Kind="MusicNote" Width="160" Height="160" Foreground="{DynamicResource PrimaryContainer}"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Panel>
+                    <materialIcons:MaterialIcon Kind="MusicNote" Width="160" Height="160" Foreground="{DynamicResource PrimaryContainer}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Image Source="{Binding AlbumArt}" Stretch="UniformToFill"/>
+                </Panel>
             </controls:Card>
 
-            <!-- Song Title -->
-            <TextBlock Text="{Binding SongTitle}"
-                       Classes="Title"
-                       HorizontalAlignment="Center"/>
+            <!-- Song Info -->
+            <StackPanel Spacing="4" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding SongTitle}"
+                           Classes="Title"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding ArtistName}"
+                           Classes="Subtitle"
+                           HorizontalAlignment="Center"
+                           Opacity="0.8"/>
+            </StackPanel>
         </StackPanel>
 
         <!-- Progress Bar (Row 2 — closer to buttons) -->

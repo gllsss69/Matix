@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Threading;
+using Avalonia.Media.Imaging;
+using System.IO;
 using Matix.Commands;
 using NAudio.Wave;
 
@@ -48,6 +50,20 @@ namespace Matix.ViewModels
         {
             get => _songTitle;
             set => SetField(ref _songTitle, value);
+        }
+
+        private string _artistName = "Unknown Artist";
+        public string ArtistName
+        {
+            get => _artistName;
+            set => SetField(ref _artistName, value);
+        }
+
+        private Bitmap? _albumArt;
+        public Bitmap? AlbumArt
+        {
+            get => _albumArt;
+            set => SetField(ref _albumArt, value);
         }
 
         private TimeSpan _currentTime = TimeSpan.Zero;
@@ -204,7 +220,34 @@ namespace Matix.ViewModels
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
 
-                SongTitle = System.IO.Path.GetFileNameWithoutExtension(filePath);
+                try
+                {
+                    using var file = TagLib.File.Create(filePath);
+                    SongTitle = string.IsNullOrWhiteSpace(file.Tag.Title) 
+                        ? Path.GetFileNameWithoutExtension(filePath) 
+                        : file.Tag.Title;
+
+                    ArtistName = file.Tag.Performers?.Length > 0 
+                        ? string.Join(", ", file.Tag.Performers) 
+                        : "Unknown Artist";
+
+                    if (file.Tag.Pictures.Length > 0)
+                    {
+                        var bin = (byte[])(file.Tag.Pictures[0].Data.Data);
+                        using var stream = new MemoryStream(bin);
+                        AlbumArt = new Bitmap(stream);
+                    }
+                    else
+                    {
+                        AlbumArt = null;
+                    }
+                }
+                catch
+                {
+                    SongTitle = Path.GetFileNameWithoutExtension(filePath);
+                    ArtistName = "Unknown Artist";
+                    AlbumArt = null;
+                }
             }
             catch { }
         }
