@@ -18,7 +18,7 @@
                     <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="{DynamicResource PrimaryColor}"/>
                 </Button>
             </controls:Card>
-            <TextBlock Text="Theme" Classes="Title"
+            <TextBlock Text="{DynamicResource StrTheme}" Classes="Title"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 

@@ -6,23 +6,29 @@ namespace Matix.ViewModels
 {
     public class LanguageViewModel : ViewModelBase
     {
-        private string _selectedLanguage = "English";
+        private string _selectedLanguage = App.Settings.Language;
 
         public ObservableCollection<string> Languages { get; } = new()
         {
+            "Czech",
             "English",
-            "Ukrainian",
             "German",
-            "French",
-            "Spanish",
-            "Polish",
             "Japanese",
+            "Polish",
+            "Slovak",
+            "Ukrainian",
         };
 
         public string SelectedLanguage
         {
             get => _selectedLanguage;
-            set { SetField(ref _selectedLanguage, value); }
+            set 
+            { 
+                if (SetField(ref _selectedLanguage, value))
+                {
+                    App.ApplyLanguage(value);
+                }
+            }
         }
 
         public ICommand GoBackCommand { get; }

@@ -18,12 +18,12 @@
                     <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="{DynamicResource PrimaryColor}"/>
                 </Button>
             </controls:Card>
-            <TextBlock Text="Quality" Classes="Title"
+            <TextBlock Text="{DynamicResource StrQuality}" Classes="Title"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
         <Grid Grid.Row="1">
-            <TextBlock Text="In progress..."
+            <TextBlock Text="{DynamicResource StrInProgress}"
                        Classes="Title"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>

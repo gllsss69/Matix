@@ -48,25 +48,25 @@
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToThemeCommand}">
                     <Grid ColumnDefinitions="Auto,*">
                         <materialIcons:MaterialIcon Grid.Column="0" Kind="PaletteOutline" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
-                        <TextBlock Grid.Column="1" Text="Theme" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource StrTheme}" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToQualityCommand}">
                     <Grid ColumnDefinitions="Auto,*">
                         <materialIcons:MaterialIcon Grid.Column="0" Kind="Equalizer" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
-                        <TextBlock Grid.Column="1" Text="Quality" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource StrQuality}" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToLanguageCommand}">
                     <Grid ColumnDefinitions="Auto,*">
                         <materialIcons:MaterialIcon Grid.Column="0" Kind="Translate" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
-                        <TextBlock Grid.Column="1" Text="Language" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource StrLanguage}" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToAboutCommand}">
                     <Grid ColumnDefinitions="Auto,*">
                         <materialIcons:MaterialIcon Grid.Column="0" Kind="InformationOutline" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
-                        <TextBlock Grid.Column="1" Text="About" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource StrAbout}" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
             </StackPanel>

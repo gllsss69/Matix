@@ -1,0 +1,10 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="StrTheme">Thema</sys:String>
+    <sys:String x:Key="StrQuality">Qualität</sys:String>
+    <sys:String x:Key="StrLanguage">Sprache</sys:String>
+    <sys:String x:Key="StrAbout">Über</sys:String>
+    <sys:String x:Key="StrInProgress">In Bearbeitung...</sys:String>
+    <sys:String x:Key="StrGithubRepo">GitHub-Repository</sys:String>
+</ResourceDictionary>

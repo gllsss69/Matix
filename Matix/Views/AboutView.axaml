@@ -17,7 +17,7 @@
                     <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="{DynamicResource PrimaryColor}"/>
                 </Button>
             </controls:Card>
-            <TextBlock Text="About" Classes="Title"
+            <TextBlock Text="{DynamicResource StrAbout}" Classes="Title"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
@@ -45,7 +45,7 @@
                         Command="{Binding OpenGitHubCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                         <materialIcons:MaterialIcon Kind="Github" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
-                        <TextBlock Text="GitHub Repository" VerticalAlignment="Center"
+                        <TextBlock Text="{DynamicResource StrGithubRepo}" VerticalAlignment="Center"
                                    Classes="Subtitle"/>
                     </StackPanel>
                 </Button>

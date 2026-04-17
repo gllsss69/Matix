@@ -10,12 +10,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="/Resources/Colors.axaml"/>
+                <ResourceInclude Source="/Resources/Langs/en.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 
     <Application.Styles>
-        <themes:MaterialTheme PrimaryColor="Red" SecondaryColor="Indigo" />
+        <themes:MaterialTheme PrimaryColor="Purple" SecondaryColor="Indigo" />
         <materialIcons:MaterialIconStyles />
         <StyleInclude Source="/Resources/Styles.axaml"/>
     </Application.Styles>

@@ -18,15 +18,21 @@
                     <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="{DynamicResource PrimaryColor}"/>
                 </Button>
             </controls:Card>
-            <TextBlock Text="Language" Classes="Title"
+            <TextBlock Text="{DynamicResource StrLanguage}" Classes="Title"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
-        <Grid Grid.Row="1">
-            <TextBlock Text="In progress..."
-                       Classes="Title"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-        </Grid>
+        <!-- Selection List -->
+        <controls:Card Grid.Row="1" Margin="24" CornerRadius="16" Background="{DynamicResource PrimaryContainer}">
+            <ListBox ItemsSource="{Binding Languages}" 
+                     SelectedItem="{Binding SelectedLanguage}"
+                     Margin="8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" Classes="Subtitle" Margin="8,4"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </controls:Card>
     </Grid>
 </UserControl>
