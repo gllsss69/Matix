@@ -3,7 +3,7 @@
     
     <Styles.Resources>
         <!-- Typography -->
-        <FontFamily x:Key="MainFontFamily">Roboto, Inter, Segoe UI, sans-serif</FontFamily>
+        <FontFamily x:Key="MainFontFamily">Roboto</FontFamily>
     </Styles.Resources>
     
     <Style Selector="TextBlock">
@@ -63,6 +63,44 @@
     <Style Selector="ListBox">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    
+   <Style Selector="ListBoxItem">
+        <Setter Property="CornerRadius" Value="12"/> 
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Margin" Value="4,2"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+
+    <!-- Форсуємо заокруглення для всіх внутрішніх елементів (фон виділення, ефект хвилі тощо) -->
+    <Style Selector="ListBoxItem /template/ ContentPresenter">
+        <Setter Property="CornerRadius" Value="12"/>
+    </Style>
+    
+    <Style Selector="ListBoxItem /template/ Border">
+        <Setter Property="CornerRadius" Value="12"/>
+    </Style>
+
+    <!-- Кольори виділення та наведення -->
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource HoverBackground}"/>
+    </Style>
+    <Style Selector="ListBoxItem:pointerover /template/ Border">
+        <Setter Property="Background" Value="{DynamicResource HoverBackground}"/>
+    </Style>
+    
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SelectionBackground}"/>
+    </Style>
+    <Style Selector="ListBoxItem:selected /template/ Border">
+        <Setter Property="Background" Value="{DynamicResource SelectionBackground}"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SelectionBackground}"/>
+    </Style>
+    <Style Selector="ListBoxItem:pressed /template/ Border">
+        <Setter Property="Background" Value="{DynamicResource SelectionBackground}"/>
     </Style>
 
 </Styles>

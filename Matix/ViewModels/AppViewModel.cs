@@ -22,7 +22,16 @@ namespace Matix.ViewModels
         {
             Player = new PlayerViewModel(NavigateTo);
             _currentPage = Player;
+            Player.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(PlayerViewModel.IsPlaylistOpen))
+                {
+                    OnPropertyChanged(nameof(AppMinWidth));
+                }
+            };
         }
+
+        public double AppMinWidth => Player.IsPlaylistOpen ? 1100 : 800;
 
         public void NavigateTo(ViewModelBase page) => CurrentPage = page;
 

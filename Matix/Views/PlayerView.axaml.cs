@@ -24,6 +24,8 @@ namespace Matix.Views
 
         private async void OpenFileButton_Click(object? sender, RoutedEventArgs e)
         {
+            if (VM is { } vmOpen) vmOpen.IsSettingsOpen = false;
+
             var topLevel = TopLevel.GetTopLevel(this);
             if (topLevel == null) return;
 
@@ -41,7 +43,30 @@ namespace Matix.Views
             });
 
             if (files.Count > 0 && VM is { } vm)
+            {
                 vm.LoadAudio(files[0].Path.LocalPath);
+                // optionally add it to the playlist or just play it
+                vm.Playlist.Clear();
+                var track = new Models.Track(files[0].Path.LocalPath, System.IO.Path.GetFileNameWithoutExtension(files[0].Path.LocalPath));
+                vm.Playlist.Add(track);
+                _ = track.LoadAlbumArtAsync();
+                vm.SelectedTrack = track;
+            }
+        }
+
+        private async void OpenFolderButton_Click(object? sender, RoutedEventArgs e)
+        {
+            var topLevel = TopLevel.GetTopLevel(this);
+            if (topLevel == null) return;
+
+            var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            {
+                Title = "Select Music Folder",
+                AllowMultiple = false
+            });
+
+            if (folders.Count > 0 && VM is { } vm)
+                vm.LoadFolder(folders[0].Path.LocalPath);
         }
 
         private void UpdateProgress(PointerEventArgs e, Visual relativeTo)

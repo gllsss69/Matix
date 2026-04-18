@@ -5,7 +5,7 @@
     
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
-            <SolidColorBrush x:Key="AppBackground" Color="#F3EDF7"/>
+            <SolidColorBrush x:Key="AppBackground" Color="#D1C4E9"/>
             <SolidColorBrush x:Key="AppForeground" Color="#1D1B20"/>
             <SolidColorBrush x:Key="PrimaryColor" Color="#6750A4"/>
             <SolidColorBrush x:Key="PrimaryContainer" Color="#EADDFF"/>
@@ -14,6 +14,8 @@
             <SolidColorBrush x:Key="CardBackground" Color="#EADDFF"/>
             <SolidColorBrush x:Key="SecondaryColor" Color="#625B71"/>
             <SolidColorBrush x:Key="SecondaryContainer" Color="#E8DEF8"/>
+            <SolidColorBrush x:Key="SelectionBackground" Color="#336750A4"/>
+            <SolidColorBrush x:Key="HoverBackground" Color="#1A6750A4"/>
         </ResourceDictionary>
         
         <ResourceDictionary x:Key="Dark">
@@ -26,6 +28,8 @@
             <SolidColorBrush x:Key="CardBackground" Color="#4F378B"/>
             <SolidColorBrush x:Key="SecondaryColor" Color="#CCC2DC"/>
             <SolidColorBrush x:Key="SecondaryContainer" Color="#4A4458"/>
+            <SolidColorBrush x:Key="SelectionBackground" Color="#33D0BCFF"/>
+            <SolidColorBrush x:Key="HoverBackground" Color="#1AD0BCFF"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

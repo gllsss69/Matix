@@ -7,6 +7,7 @@ namespace Matix.Models
     {
         public string Theme { get; set; } = "Light";
         public string Language { get; set; } = "English";
+        public string LastOpenedFolder { get; set; } = string.Empty;
 
         private const string SettingsFile = "settings.json";
 

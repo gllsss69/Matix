@@ -5,8 +5,12 @@ using Avalonia;
 using Avalonia.Threading;
 using Avalonia.Media.Imaging;
 using System.IO;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Matix.Commands;
+using Matix.Models;
 using NAudio.Wave;
+using System.Threading.Tasks;
 
 namespace Matix.ViewModels
 {
@@ -20,6 +24,8 @@ namespace Matix.ViewModels
         public ICommand GoToQualityCommand { get; }
         public ICommand GoToThemeCommand { get; }
         public ICommand ToggleSettingsCommand { get; }
+        public ICommand TogglePlaylistCommand { get; }
+        public ICommand RemoveTrackCommand { get; }
 
         private bool _isSettingsOpen;
         public bool IsSettingsOpen
@@ -27,6 +33,32 @@ namespace Matix.ViewModels
             get => _isSettingsOpen;
             set => SetField(ref _isSettingsOpen, value);
         }
+
+        private bool _isPlaylistOpen;
+        public bool IsPlaylistOpen
+        {
+            get => _isPlaylistOpen;
+            set => SetField(ref _isPlaylistOpen, value);
+        }
+
+        public ObservableCollection<Track> Playlist { get; } = new();
+
+        private Track? _selectedTrack;
+        public Track? SelectedTrack
+        {
+            get => _selectedTrack;
+            set
+            {
+                SetField(ref _selectedTrack, value);
+                if (value != null && value.FilePath != _loadedFilePath)
+                {
+                    LoadAudio(value.FilePath);
+                    TogglePlay(); // optional auto-play
+                }
+            }
+        }
+
+        private string _loadedFilePath = string.Empty;
 
         // Playback
         private bool _isRepeatEnabled;
@@ -174,6 +206,9 @@ namespace Matix.ViewModels
             GoToQualityCommand = new RelayCommand(() => { IsSettingsOpen = false; _navigateTo(new QualityViewModel(GoBack)); });
             GoToThemeCommand = new RelayCommand(() => { IsSettingsOpen = false; _navigateTo(new ThemeViewModel(GoBack)); });
 
+            TogglePlaylistCommand = new RelayCommand(() => IsPlaylistOpen = !IsPlaylistOpen);
+            RemoveTrackCommand = new RelayCommand<Track>(RemoveTrack);
+
             // Timer
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200) };
             _timer.Tick += (_, _) =>
@@ -191,13 +226,58 @@ namespace Matix.ViewModels
                         }
                         else
                         {
-                            IsPlaying = false;
-                            CurrentTime = TimeSpan.Zero;
-                            _audioFile.Position = 0;
+                            NextTrack();
                         }
                     }
                 }
             };
+
+            // Load last opened folder
+            if (!string.IsNullOrWhiteSpace(App.Settings.LastOpenedFolder) && Directory.Exists(App.Settings.LastOpenedFolder))
+            {
+                LoadFolder(App.Settings.LastOpenedFolder);
+            }
+        }
+
+        public void LoadFolder(string folderPath)
+        {
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath)) return;
+
+            App.Settings.LastOpenedFolder = folderPath;
+            App.Settings.Save();
+
+            Playlist.Clear();
+            var extensions = new[] { ".mp3", ".wav", ".aiff", ".wma", ".m4a" };
+            var files = Directory.GetFiles(folderPath)
+                .Where(f => extensions.Contains(Path.GetExtension(f).ToLowerInvariant()))
+                .OrderBy(f => f);
+
+            foreach (var file in files)
+            {
+                string title = Path.GetFileNameWithoutExtension(file);
+                // Attempt to get title from tags if desired, but keep it simple
+                try
+                {
+                    using var tfile = TagLib.File.Create(file);
+                    if (!string.IsNullOrWhiteSpace(tfile.Tag.Title))
+                    {
+                        title = tfile.Tag.Title;
+                    }
+                }
+                catch { }
+
+                var track = new Track(file, title);
+                Playlist.Add(track);
+                _ = track.LoadAlbumArtAsync();
+            }
+
+            if (Playlist.Any())
+            {
+                var track = Playlist.First();
+                _selectedTrack = track;
+                OnPropertyChanged(nameof(SelectedTrack));
+                LoadAudio(track.FilePath);
+            }
         }
 
         private void GoBack() => _navigateTo(this);  // navigate back to player
@@ -205,12 +285,15 @@ namespace Matix.ViewModels
         // Audio loading
         public void LoadAudio(string filePath)
         {
+            if (string.IsNullOrWhiteSpace(filePath)) return;
+            
             _waveOut?.Stop();
             _waveOut?.Dispose();
             _audioFile?.Dispose();
 
             try
             {
+                _loadedFilePath = filePath;
                 _audioFile = new AudioFileReader(filePath);
                 _waveOut = new WaveOutEvent();
                 _waveOut.Init(_audioFile);
@@ -263,10 +346,36 @@ namespace Matix.ViewModels
 
         private void NextTrack()
         {
-            CurrentTime = TimeSpan.Zero;
-            if (IsPlaying) _timer.Start();
+            if (Playlist.Count == 0) return;
+            var index = Playlist.IndexOf(SelectedTrack);
+            if (index == -1 || index == Playlist.Count - 1)
+                SelectedTrack = Playlist.FirstOrDefault();
+            else
+                SelectedTrack = Playlist[index + 1];
         }
 
-        private void PrevTrack() => CurrentTime = TimeSpan.Zero;
+        private void PrevTrack()
+        {
+            if (Playlist.Count == 0) return;
+            if (CurrentTime.TotalSeconds > 3)
+            {
+                CurrentTime = TimeSpan.Zero; return; // restart if played > 3 secs
+            }
+            var index = Playlist.IndexOf(SelectedTrack);
+            if (index == -1 || index == 0)
+                SelectedTrack = Playlist.LastOrDefault();
+            else
+                SelectedTrack = Playlist[index - 1];
+        }
+
+        private void RemoveTrack(object? param)
+        {
+            if (param is Track track)
+            {
+                Playlist.Remove(track);
+                if (SelectedTrack == track)
+                    NextTrack();
+            }
+        }
     }
 }
