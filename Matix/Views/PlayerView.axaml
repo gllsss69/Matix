@@ -84,18 +84,17 @@
         <!-- Main Layout with Columns -->
         <Grid ColumnDefinitions="Auto, *">
             <!-- Column 0: Sidebar (Playlist + Folder) -->
-            <Grid Grid.Column="0" RowDefinitions="*, Auto" IsVisible="{Binding IsPlaylistOpen}" 
+            <Grid Grid.Column="0" RowDefinitions="*, Auto" IsVisible="{Binding IsPlaylistOpen}"
                   Margin="104,24,0,24" Width="280">
-                  
+
                 <!-- Playlist Card -->
-                <controls:Card Grid.Row="0" Margin="0,0,0,24" Padding="8" CornerRadius="16" 
+                <controls:Card Grid.Row="0" Margin="0,0,0,24" Padding="8" CornerRadius="16"
                                Background="{DynamicResource PrimaryContainer}">
                     <ListBox ItemsSource="{Binding Playlist}" SelectedItem="{Binding SelectedTrack}"
                              Background="Transparent" BorderThickness="0" CornerRadius="16" x:Name="PlaylistListBox"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <!-- The button for deleting needs to be top-right or next to title -->
                                 <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,4" Background="Transparent">
                                     <Border Grid.Column="0" Width="36" Height="36" Margin="4,0,12,0" CornerRadius="6" ClipToBounds="True" Background="#1A000000">
                                         <Panel>
@@ -104,10 +103,10 @@
                                         </Panel>
                                     </Border>
                                     <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Classes="Subtitle" TextTrimming="CharacterEllipsis" FontSize="13" Margin="0,0,8,0"/>
-                                    <!-- Delete Button styled like Settings button but smaller -->
+                                    <!-- Delete Button -->
                                     <controls:Card Grid.Column="2" Width="32" Height="32" CornerRadius="8" Padding="0" Background="{DynamicResource PrimaryContainer}" ZIndex="2">
-                                        <Button Classes="rippleBtn" Width="32" Height="32" CornerRadius="8" 
-                                                Command="{Binding $parent[UserControl].((vm:PlayerViewModel)DataContext).RemoveTrackCommand}" 
+                                        <Button Classes="rippleBtn" Width="32" Height="32" CornerRadius="8"
+                                                Command="{Binding $parent[UserControl].((vm:PlayerViewModel)DataContext).RemoveTrackCommand}"
                                                 CommandParameter="{Binding}">
                                             <materialIcons:MaterialIcon Kind="TrashCanOutline" Width="16" Height="16"/>
                                         </Button>
@@ -117,7 +116,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </controls:Card>
-                
+
                 <!-- Folder Button -->
                 <controls:Card Grid.Row="1" Padding="0" CornerRadius="16" Background="{DynamicResource PrimaryContainer}">
                     <Button Height="48" CornerRadius="16" HorizontalAlignment="Stretch" Classes="rippleBtn" Click="OpenFolderButton_Click">
@@ -126,10 +125,10 @@
                 </controls:Card>
             </Grid>
 
-            <!-- Column 1: Player Panel EXACTLY AS ORIGINAL -->
+            <!-- Column 1: Player Panel -->
             <Grid Grid.Column="1" RowDefinitions="80,*,Auto,Auto">
-                
-                <!-- Main Content (Row 1 — stretches between header zone and controls) -->
+
+                <!-- Main Content (Row 1) -->
                 <StackPanel Grid.Row="1" VerticalAlignment="Center" Spacing="24" Margin="60,0,60,0">
 
                     <!-- Album Art Squircle -->
@@ -153,7 +152,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Progress Bar (Row 2 — closer to buttons) -->
+                <!-- Progress Bar (Row 2) -->
                 <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="80,0,80,0">
                     <TextBlock Grid.Column="0" Text="{Binding CurrentTimeString}"
                                Classes="Subtitle" VerticalAlignment="Center"
@@ -204,6 +203,12 @@
                             <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
                                 <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding NextCommand}">
                                     <materialIcons:MaterialIcon Kind="SkipNext" Width="20" Height="20"/>
+                                </Button>
+                            </controls:Card>
+
+                            <controls:Card Classes="toggleActionBtn" Classes.toggleActionActive="{Binding IsShuffleEnabled}" Width="48" Height="48" CornerRadius="16" Padding="0">
+                                <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding ToggleShuffleCommand}">
+                                    <materialIcons:MaterialIcon Kind="Shuffle" Width="20" Height="20"/>
                                 </Button>
                             </controls:Card>
                         </StackPanel>

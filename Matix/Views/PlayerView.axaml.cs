@@ -45,7 +45,6 @@ namespace Matix.Views
             if (files.Count > 0 && VM is { } vm)
             {
                 vm.LoadAudio(files[0].Path.LocalPath);
-                // optionally add it to the playlist or just play it
                 vm.Playlist.Clear();
                 var track = new Models.Track(files[0].Path.LocalPath, System.IO.Path.GetFileNameWithoutExtension(files[0].Path.LocalPath));
                 vm.Playlist.Add(track);

@@ -26,6 +26,7 @@ namespace Matix.ViewModels
         public ICommand ToggleSettingsCommand { get; }
         public ICommand TogglePlaylistCommand { get; }
         public ICommand RemoveTrackCommand { get; }
+        public ICommand ToggleShuffleCommand { get; }
 
         private bool _isSettingsOpen;
         public bool IsSettingsOpen
@@ -66,6 +67,13 @@ namespace Matix.ViewModels
         {
             get => _isRepeatEnabled;
             set => SetField(ref _isRepeatEnabled, value);
+        }
+
+        private bool _isShuffleEnabled;
+        public bool IsShuffleEnabled
+        {
+            get => _isShuffleEnabled;
+            set => SetField(ref _isShuffleEnabled, value);
         }
 
         private bool _isPlaying;
@@ -208,6 +216,7 @@ namespace Matix.ViewModels
 
             TogglePlaylistCommand = new RelayCommand(() => IsPlaylistOpen = !IsPlaylistOpen);
             RemoveTrackCommand = new RelayCommand<Track>(RemoveTrack);
+            ToggleShuffleCommand = new RelayCommand(() => IsShuffleEnabled = !IsShuffleEnabled);
 
             // Timer
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200) };
@@ -347,11 +356,27 @@ namespace Matix.ViewModels
         private void NextTrack()
         {
             if (Playlist.Count == 0) return;
-            var index = Playlist.IndexOf(SelectedTrack);
-            if (index == -1 || index == Playlist.Count - 1)
-                SelectedTrack = Playlist.FirstOrDefault();
+
+            if (IsShuffleEnabled && Playlist.Count > 1)
+            {
+                var rng = new Random();
+                var currentIndex = Playlist.IndexOf(SelectedTrack!);
+                int nextIndex;
+                do
+                {
+                    nextIndex = rng.Next(Playlist.Count);
+                } while (nextIndex == currentIndex);
+
+                SelectedTrack = Playlist[nextIndex];
+            }
             else
-                SelectedTrack = Playlist[index + 1];
+            {
+                var index = Playlist.IndexOf(SelectedTrack!);
+                if (index == -1 || index == Playlist.Count - 1)
+                    SelectedTrack = Playlist.FirstOrDefault();
+                else
+                    SelectedTrack = Playlist[index + 1];
+            }
         }
 
         private void PrevTrack()
@@ -359,13 +384,29 @@ namespace Matix.ViewModels
             if (Playlist.Count == 0) return;
             if (CurrentTime.TotalSeconds > 3)
             {
-                CurrentTime = TimeSpan.Zero; return; // restart if played > 3 secs
+                CurrentTime = TimeSpan.Zero; return;
             }
-            var index = Playlist.IndexOf(SelectedTrack);
-            if (index == -1 || index == 0)
-                SelectedTrack = Playlist.LastOrDefault();
+
+            if (IsShuffleEnabled && Playlist.Count > 1)
+            {
+                var rng = new Random();
+                var currentIndex = Playlist.IndexOf(SelectedTrack!);
+                int prevIndex;
+                do
+                {
+                    prevIndex = rng.Next(Playlist.Count);
+                } while (prevIndex == currentIndex);
+
+                SelectedTrack = Playlist[prevIndex];
+            }
             else
-                SelectedTrack = Playlist[index - 1];
+            {
+                var index = Playlist.IndexOf(SelectedTrack!);
+                if (index == -1 || index == 0)
+                    SelectedTrack = Playlist.LastOrDefault();
+                else
+                    SelectedTrack = Playlist[index - 1];
+            }
         }
 
         private void RemoveTrack(object? param)
