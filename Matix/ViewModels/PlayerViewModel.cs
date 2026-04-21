@@ -185,6 +185,8 @@ namespace Matix.ViewModels
         public Thickness VolumeThumbMargin  => new(Math.Max(0, VolumeWidth - 2), 0, 0, 0);
         public Thickness VolumeBadgeMargin  => new(VolumeWidth, 0, 0, 0);
 
+        public string LibraryPath => App.Settings.LastOpenedFolder;
+
         // Commands
         public ICommand PlayPauseCommand { get; }
         public ICommand NextCommand { get; }
@@ -254,6 +256,7 @@ namespace Matix.ViewModels
 
             App.Settings.LastOpenedFolder = folderPath;
             App.Settings.Save();
+            OnPropertyChanged(nameof(LibraryPath));
 
             Playlist.Clear();
             var extensions = new[] { ".mp3", ".wav", ".aiff", ".wma", ".m4a" };

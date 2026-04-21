@@ -1,5 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+        xmlns:assist="clr-namespace:Material.Styles.Assists;assembly=Material.Styles">
     
     <Styles.Resources>
         <!-- Typography -->
@@ -29,11 +31,51 @@
     </Style>
 
     <!-- Button Styles -->
-    <Style Selector="Button.rippleBtn">
-        <Setter Property="Background" Value="Transparent"/>
+<Style Selector="Button.rippleBtn">
         <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
-        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="Transparent" 
+                        BorderThickness="0"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="Transparent"
+                                      Foreground="{TemplateBinding Foreground}" 
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        
+        <Setter Property="RenderTransform" Value="scale(1)"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" Easing="CircularEaseOut"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.rippleBtn:pointerover">
+        <Setter Property="RenderTransform" Value="scale(1.1)"/>
+    </Style>
+    <Style Selector="Button.rippleBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
+    </Style>
+
+    <Style Selector="Button.rippleBtn:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.9)"/>
+    </Style>
+    <Style Selector="Button.rippleBtn:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
     </Style>
 
     <Style Selector="Button.settingsItemBtn">
@@ -46,7 +88,7 @@
         <Setter Property="Margin" Value="8,2"/>
     </Style>
 
-    <Style Selector="Button.settingsItemBtn /template/ ContentPresenter">
+    <Style Selector="Button.settingsItemBtn /template/ Border">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="CornerRadius" Value="12"/>
@@ -99,8 +141,31 @@
     <Style Selector="ListBoxItem:pressed /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource SelectionBackground}"/>
     </Style>
+
     <Style Selector="ListBoxItem:pressed /template/ Border">
         <Setter Property="Background" Value="{DynamicResource SelectionBackground}"/>
+    </Style>
+
+    <!-- Shadow Control -->
+    <Style Selector="controls|Card">
+        <Setter Property="assist:ShadowAssist.ShadowDepth" Value="Depth0"/>
+    </Style>
+
+    <Style Selector="controls|Card /template/ Border">
+        <Setter Property="BoxShadow" Value="none"/>
+    </Style>
+
+    <!-- ToolTip Styling -->
+    <Style Selector="ToolTip">
+        <Setter Property="Background" Value="{DynamicResource PrimaryContainer}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Opacity" Value="0.95"/>
     </Style>
 
 </Styles>

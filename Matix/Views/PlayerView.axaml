@@ -21,16 +21,66 @@
             <Setter Property="CornerRadius" Value="16"/>
             <Setter Property="Margin" Value="0,2"/>
         </Style>
+
+        <Style Selector="Border.settingsBackdrop">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="CubicEaseOut"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.settingsBackdrop.isOpen">
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="IsHitTestVisible" Value="True"/>
+        </Style>
+
+        <Style Selector="controls|Card.settingsMenu">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="RenderTransform" Value="translateX(-40px) scale(0.95)"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.25" Easing="CubicEaseOut"/>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.25" Easing="CubicEaseOut"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="controls|Card.settingsMenu.isOpen">
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="IsHitTestVisible" Value="True"/>
+            <Setter Property="RenderTransform" Value="translateX(0px) scale(1)"/>
+        </Style>
+
+        <Style Selector="Grid.animatedSidebar">
+            <Setter Property="Width" Value="0"/>
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="ClipToBounds" Value="True"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Width" Duration="0:0:0.4" Easing="CircularEaseOut"/>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="SineEaseOut"/>
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Grid.animatedSidebar.isOpen">
+            <Setter Property="Width" Value="384"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
     </UserControl.Styles>
 
     <Grid>
-        <!-- Invisible backdrop to close Settings on click outside -->
-        <Border IsVisible="{Binding IsSettingsOpen}" ZIndex="5"
+        <Border Classes="settingsBackdrop"
+                Classes.isOpen="{Binding IsSettingsOpen}" 
+                ZIndex="5"
                 Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 PointerPressed="CloseSettings_PointerPressed"/>
 
-        <!-- Settings Popup Menu -->
-        <controls:Card IsVisible="{Binding IsSettingsOpen}" ZIndex="10"
+        <controls:Card Classes="settingsMenu"
+                       Classes.isOpen="{Binding IsSettingsOpen}" 
+                       ZIndex="10"
                        Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"
                        Margin="100,24,0,0" CornerRadius="16" Padding="0,10" Background="{DynamicResource PrimaryContainer}">
             <StackPanel HorizontalAlignment="Stretch">
@@ -67,7 +117,6 @@
             </StackPanel>
         </controls:Card>
 
-        <!-- Floating Sidebar Buttons -->
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="24,24,0,0" Spacing="24" ZIndex="10">
             <controls:Card Width="56" Height="56" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
                 <Button Classes="rippleBtn" Width="56" Height="56" CornerRadius="16" Command="{Binding ToggleSettingsCommand}">
@@ -81,57 +130,53 @@
             </controls:Card>
         </StackPanel>
 
-        <!-- Main Layout with Columns -->
         <Grid ColumnDefinitions="Auto, *">
-            <!-- Column 0: Sidebar (Playlist + Folder) -->
-            <Grid Grid.Column="0" RowDefinitions="*, Auto" IsVisible="{Binding IsPlaylistOpen}"
-                  Margin="104,24,0,24" Width="280">
+            
+            <Grid Grid.Column="0" 
+                  Classes="animatedSidebar"
+                  Classes.isOpen="{Binding IsPlaylistOpen}"
+                  HorizontalAlignment="Left">
+                
+                <Grid RowDefinitions="*, Auto" Margin="104,24,0,24" Width="280">
+                    <controls:Card Grid.Row="0" Margin="0,0,0,24" Padding="8" CornerRadius="16"
+                                   Background="{DynamicResource PrimaryContainer}">
+                        <ListBox ItemsSource="{Binding Playlist}" SelectedItem="{Binding SelectedTrack}"
+                                 Background="Transparent" BorderThickness="0" CornerRadius="16" x:Name="PlaylistListBox"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,4" Background="Transparent">
+                                        <Border Grid.Column="0" Width="36" Height="36" Margin="4,0,12,0" CornerRadius="6" ClipToBounds="True" Background="#1A000000">
+                                            <Panel>
+                                                <materialIcons:MaterialIcon Kind="ImageOutline" Width="20" Height="20" Opacity="0.5" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !HasAlbumArt}"/>
+                                                <Image Source="{Binding AlbumArt}" Stretch="UniformToFill" IsVisible="{Binding HasAlbumArt}"/>
+                                            </Panel>
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Classes="Subtitle" TextTrimming="CharacterEllipsis" FontSize="13" Margin="0,0,8,0"/>
+                                        <controls:Card Grid.Column="2" Width="32" Height="32" CornerRadius="8" Padding="0" Background="{DynamicResource PrimaryContainer}" ZIndex="2">
+                                            <Button Classes="rippleBtn" Width="32" Height="32" CornerRadius="8"
+                                                    Command="{Binding $parent[UserControl].((vm:PlayerViewModel)DataContext).RemoveTrackCommand}"
+                                                    CommandParameter="{Binding}">
+                                                <materialIcons:MaterialIcon Kind="TrashCanOutline" Width="16" Height="16"/>
+                                            </Button>
+                                        </controls:Card>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </controls:Card>
 
-                <!-- Playlist Card -->
-                <controls:Card Grid.Row="0" Margin="0,0,0,24" Padding="8" CornerRadius="16"
-                               Background="{DynamicResource PrimaryContainer}">
-                    <ListBox ItemsSource="{Binding Playlist}" SelectedItem="{Binding SelectedTrack}"
-                             Background="Transparent" BorderThickness="0" CornerRadius="16" x:Name="PlaylistListBox"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,4" Background="Transparent">
-                                    <Border Grid.Column="0" Width="36" Height="36" Margin="4,0,12,0" CornerRadius="6" ClipToBounds="True" Background="#1A000000">
-                                        <Panel>
-                                            <materialIcons:MaterialIcon Kind="ImageOutline" Width="20" Height="20" Opacity="0.5" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !HasAlbumArt}"/>
-                                            <Image Source="{Binding AlbumArt}" Stretch="UniformToFill" IsVisible="{Binding HasAlbumArt}"/>
-                                        </Panel>
-                                    </Border>
-                                    <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Classes="Subtitle" TextTrimming="CharacterEllipsis" FontSize="13" Margin="0,0,8,0"/>
-                                    <!-- Delete Button -->
-                                    <controls:Card Grid.Column="2" Width="32" Height="32" CornerRadius="8" Padding="0" Background="{DynamicResource PrimaryContainer}" ZIndex="2">
-                                        <Button Classes="rippleBtn" Width="32" Height="32" CornerRadius="8"
-                                                Command="{Binding $parent[UserControl].((vm:PlayerViewModel)DataContext).RemoveTrackCommand}"
-                                                CommandParameter="{Binding}">
-                                            <materialIcons:MaterialIcon Kind="TrashCanOutline" Width="16" Height="16"/>
-                                        </Button>
-                                    </controls:Card>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </controls:Card>
-
-                <!-- Folder Button -->
-                <controls:Card Grid.Row="1" Padding="0" CornerRadius="16" Background="{DynamicResource PrimaryContainer}">
-                    <Button Height="48" CornerRadius="16" HorizontalAlignment="Stretch" Classes="rippleBtn" Click="OpenFolderButton_Click">
-                        <materialIcons:MaterialIcon Kind="FolderOutline" Width="24" Height="24" Opacity="0.8"/>
-                    </Button>
-                </controls:Card>
+                    <controls:Card Grid.Row="1" Padding="0" CornerRadius="16" Background="{DynamicResource PrimaryContainer}">
+                        <Button Height="48" CornerRadius="16" HorizontalAlignment="Stretch" Classes="rippleBtn" Click="OpenFolderButton_Click"
+                                ToolTip.Tip="{Binding LibraryPath}" ToolTip.ShowDelay="2000">
+                            <materialIcons:MaterialIcon Kind="FolderOutline" Width="24" Height="24" Opacity="0.8"/>
+                        </Button>
+                    </controls:Card>
+                </Grid>
             </Grid>
 
-            <!-- Column 1: Player Panel -->
             <Grid Grid.Column="1" RowDefinitions="80,*,Auto,Auto">
-
-                <!-- Main Content (Row 1) -->
                 <StackPanel Grid.Row="1" VerticalAlignment="Center" Spacing="24" Margin="60,0,60,0">
-
-                    <!-- Album Art Squircle -->
                     <controls:Card Width="320" Height="320" HorizontalAlignment="Center" CornerRadius="90" Padding="0" Background="{DynamicResource PrimaryColor}">
                         <Panel>
                             <materialIcons:MaterialIcon Kind="MusicNote" Width="160" Height="160" Foreground="{DynamicResource PrimaryContainer}"
@@ -140,72 +185,48 @@
                         </Panel>
                     </controls:Card>
 
-                    <!-- Song Info -->
                     <StackPanel Spacing="4" HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding SongTitle}"
-                                   Classes="Title"
-                                   HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding ArtistName}"
-                                   Classes="Subtitle"
-                                   HorizontalAlignment="Center"
-                                   Opacity="0.8"/>
+                        <TextBlock Text="{Binding SongTitle}" Classes="Title" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding ArtistName}" Classes="Subtitle" HorizontalAlignment="Center" Opacity="0.8"/>
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Progress Bar (Row 2) -->
                 <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="80,0,80,0">
-                    <TextBlock Grid.Column="0" Text="{Binding CurrentTimeString}"
-                               Classes="Subtitle" VerticalAlignment="Center"
-                               Margin="0,0,16,0"/>
-
+                    <TextBlock Grid.Column="0" Text="{Binding CurrentTimeString}" Classes="Subtitle" VerticalAlignment="Center" Margin="0,0,16,0"/>
                     <Grid x:Name="ProgressTrackGrid" Grid.Column="1" Height="34" VerticalAlignment="Center" Background="Transparent"
                           PointerPressed="ProgressGrid_PointerPressed" PointerMoved="ProgressGrid_PointerMoved"
                           SizeChanged="ProgressTrackGrid_SizeChanged">
-                        <Border Height="18" CornerRadius="9" Background="{DynamicResource PrimaryContainer}"
-                                VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
-                        <Ellipse Width="4" Height="4" Fill="{DynamicResource PrimaryColor}" HorizontalAlignment="Right"
-                                 VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.5" IsHitTestVisible="False"/>
-                        <Border Height="18" CornerRadius="9,0,0,9" Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Left"
-                                Width="{Binding ProgressWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                        <Border Width="4" Height="34" Background="{DynamicResource PrimaryColor}" CornerRadius="2" HorizontalAlignment="Left"
-                                Margin="{Binding ProgressThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        <Border Height="18" CornerRadius="9" Background="{DynamicResource PrimaryContainer}" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
+                        <Ellipse Width="4" Height="4" Fill="{DynamicResource PrimaryColor}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.5" IsHitTestVisible="False"/>
+                        <Border Height="18" CornerRadius="9,0,0,9" Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Left" Width="{Binding ProgressWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                        <Border Width="4" Height="34" Background="{DynamicResource PrimaryColor}" CornerRadius="2" HorizontalAlignment="Left" Margin="{Binding ProgressThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
                     </Grid>
-
-                    <TextBlock Grid.Column="2" Text="{Binding TotalTimeString}"
-                               Classes="Subtitle" VerticalAlignment="Center"
-                               Margin="16,0,0,0"/>
+                    <TextBlock Grid.Column="2" Text="{Binding TotalTimeString}" Classes="Subtitle" VerticalAlignment="Center" Margin="16,0,0,0"/>
                 </Grid>
 
-                <!-- Bottom Controls (Row 3) -->
                 <Grid Grid.Row="3" HorizontalAlignment="Stretch" Margin="40,12,40,24">
                     <Grid ColumnDefinitions="*,Auto,*">
-
-                        <!-- Center playback buttons -->
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
                             <controls:Card Classes="toggleActionBtn" Classes.toggleActionActive="{Binding IsRepeatEnabled}" Width="48" Height="48" CornerRadius="16" Padding="0">
                                 <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding ToggleRepeatCommand}">
                                     <materialIcons:MaterialIcon Kind="ArrowURightTop" Width="20" Height="20"/>
                                 </Button>
                             </controls:Card>
-
                             <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
                                 <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding PrevCommand}">
                                     <materialIcons:MaterialIcon Kind="SkipPrevious" Width="20" Height="20"/>
                                 </Button>
                             </controls:Card>
-
                             <controls:Card Width="64" Height="64" CornerRadius="20" Padding="0" Background="{DynamicResource PrimaryContainer}">
                                 <Button Classes="rippleBtn" Width="64" Height="64" CornerRadius="20" Command="{Binding PlayPauseCommand}">
                                     <materialIcons:MaterialIcon Kind="{Binding PlayIcon}" Width="24" Height="24"/>
                                 </Button>
                             </controls:Card>
-
                             <controls:Card Width="48" Height="48" CornerRadius="16" Padding="0" Background="{DynamicResource PrimaryContainer}">
                                 <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding NextCommand}">
                                     <materialIcons:MaterialIcon Kind="SkipNext" Width="20" Height="20"/>
                                 </Button>
                             </controls:Card>
-
                             <controls:Card Classes="toggleActionBtn" Classes.toggleActionActive="{Binding IsShuffleEnabled}" Width="48" Height="48" CornerRadius="16" Padding="0">
                                 <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="16" Command="{Binding ToggleShuffleCommand}">
                                     <materialIcons:MaterialIcon Kind="Shuffle" Width="20" Height="20"/>
@@ -213,38 +234,23 @@
                             </controls:Card>
                         </StackPanel>
 
-                        <!-- Right: Volume -->
                         <Grid Grid.Column="2" HorizontalAlignment="Stretch">
-
-                            <!-- Volume slider -->
                             <Grid HorizontalAlignment="Left" Margin="50,0,0,0" Width="120" VerticalAlignment="Center">
                                 <Grid x:Name="VolumeTrackGrid" Width="120" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent"
                                       PointerPressed="VolumeGrid_PointerPressed" PointerMoved="VolumeGrid_PointerMoved"
                                       SizeChanged="VolumeTrackGrid_SizeChanged">
-                                    <Border Height="12" CornerRadius="6" Background="{DynamicResource PrimaryContainer}"
-                                            VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
-                                    <Border Height="12" CornerRadius="6,0,0,6" Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Left"
-                                            Width="{Binding VolumeWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
-                                    <Ellipse Width="3" Height="3" Fill="{DynamicResource PrimaryColor}" HorizontalAlignment="Right"
-                                             VerticalAlignment="Center" Margin="0,0,6,0" Opacity="0.5" IsHitTestVisible="False"/>
-                                    <Border Width="4" Height="30" Background="{DynamicResource PrimaryColor}" CornerRadius="2" HorizontalAlignment="Left"
-                                            Margin="{Binding VolumeThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                    <Border Height="12" CornerRadius="6" Background="{DynamicResource PrimaryContainer}" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
+                                    <Border Height="12" CornerRadius="6,0,0,6" Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Left" Width="{Binding VolumeWidth}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                                    <Ellipse Width="3" Height="3" Fill="{DynamicResource PrimaryColor}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0" Opacity="0.5" IsHitTestVisible="False"/>
+                                    <Border Width="4" Height="30" Background="{DynamicResource PrimaryColor}" CornerRadius="2" HorizontalAlignment="Left" Margin="{Binding VolumeThumbMargin}" VerticalAlignment="Center" IsHitTestVisible="False"/>
                                 </Grid>
-
                                 <Canvas HorizontalAlignment="Left" Margin="{Binding VolumeBadgeMargin}" Width="1" Height="1" VerticalAlignment="Center">
                                     <Grid Canvas.Left="-18" Canvas.Top="-38" Width="36" Height="36">
-                                        <Border Background="{DynamicResource PrimaryColor}" CornerRadius="4" Width="26" Height="26"
-                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Border Background="{DynamicResource PrimaryColor}" CornerRadius="4" Width="26" Height="26"
-                                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                RenderTransformOrigin="50%,50%">
-                                            <Border.RenderTransform>
-                                                <RotateTransform Angle="45"/>
-                                            </Border.RenderTransform>
+                                        <Border Background="{DynamicResource PrimaryColor}" CornerRadius="4" Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Border Background="{DynamicResource PrimaryColor}" CornerRadius="4" Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="50%,50%">
+                                            <Border.RenderTransform><RotateTransform Angle="45"/></Border.RenderTransform>
                                         </Border>
-                                        <TextBlock Text="{Binding VolumeText}" Foreground="{DynamicResource PrimaryContainer}"
-                                                   FontSize="11" FontWeight="Bold"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding VolumeText}" Foreground="{DynamicResource PrimaryContainer}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Canvas>
                             </Grid>

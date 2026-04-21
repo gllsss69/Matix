@@ -7,22 +7,22 @@
              x:DataType="vm:AboutViewModel"
              Background="{DynamicResource AppBackground}">
 
-    <Grid>
+    <Grid RowDefinitions="Auto, *">
         <!-- Top App Bar -->
-        <Grid Height="64" VerticalAlignment="Top">
-            <controls:Card Width="48" Height="48" CornerRadius="24" Padding="0"
-                           Background="{DynamicResource PrimaryContainer}" HorizontalAlignment="Left" Margin="16,8">
-                <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="24"
+        <Grid Grid.Row="0" Height="80">
+            <controls:Card Width="56" Height="56" CornerRadius="16" Padding="0"
+                           Background="{DynamicResource PrimaryContainer}" HorizontalAlignment="Left" Margin="24,24,0,0">
+                <Button Classes="rippleBtn" Width="56" Height="56" CornerRadius="16"
                         Command="{Binding GoBackCommand}">
                     <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="{DynamicResource PrimaryColor}"/>
                 </Button>
             </controls:Card>
             <TextBlock Text="{DynamicResource StrAbout}" Classes="Title"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,24,0,0"/>
         </Grid>
 
         <!-- About Content -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
             <controls:Card Width="120" Height="120" CornerRadius="40" Padding="0"
                            Background="{DynamicResource PrimaryColor}" HorizontalAlignment="Center" Margin="0,0,0,16">
                 <materialIcons:MaterialIcon Kind="MusicNote" Width="60" Height="60" Foreground="{DynamicResource PrimaryContainer}"

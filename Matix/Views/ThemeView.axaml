@@ -10,16 +10,16 @@
 
     <Grid RowDefinitions="Auto, *">
         <!-- Top App Bar -->
-        <Grid Height="64" VerticalAlignment="Top" Grid.Row="0">
-            <controls:Card Width="48" Height="48" CornerRadius="24" Padding="0"
-                           Background="{DynamicResource PrimaryContainer}" HorizontalAlignment="Left" Margin="16,8">
-                <Button Classes="rippleBtn" Width="48" Height="48" CornerRadius="24"
+        <Grid Grid.Row="0" Height="80">
+            <controls:Card Width="56" Height="56" CornerRadius="16" Padding="0"
+                           Background="{DynamicResource PrimaryContainer}" HorizontalAlignment="Left" Margin="24,24,0,0">
+                <Button Classes="rippleBtn" Width="56" Height="56" CornerRadius="16"
                         Command="{Binding GoBackCommand}">
                     <materialIcons:MaterialIcon Kind="ArrowLeft" Width="28" Height="28" Foreground="{DynamicResource PrimaryColor}"/>
                 </Button>
             </controls:Card>
             <TextBlock Text="{DynamicResource StrTheme}" Classes="Title"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,24,0,0"/>
         </Grid>
 
         <!-- Selection List -->

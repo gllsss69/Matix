@@ -28,8 +28,12 @@
         </DataTemplate>
     </Window.DataTemplates>
 
-    <ContentControl Content="{Binding CurrentPage}"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"/>
+    <TransitioningContentControl Content="{Binding CurrentPage}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch">
+        <TransitioningContentControl.PageTransition>
+            <CrossFade Duration="0:0:0.25" />
+        </TransitioningContentControl.PageTransition>
+    </TransitioningContentControl>
 
 </Window>
