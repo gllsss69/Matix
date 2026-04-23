@@ -442,16 +442,53 @@ namespace Matix.ViewModels
         }
 
         /// <summary>
-        /// Видаляє вказаний трек зі списку відтворення.
+        /// Видаляє вказаний трек зі списку відтворення та видаляє файл з диска.
         /// </summary>
         /// <param name="param">Об'єкт треку для видалення.</param>
         private void RemoveTrack(object? param)
         {
             if (param is Track track)
             {
+                bool wasSelected = SelectedTrack == track;
+
+                if (wasSelected)
+                {
+                    if (Playlist.Count > 1)
+                    {
+                        NextTrack();
+                    }
+                    else
+                    {
+                        // Stop and dispose audio to release file lock
+                        _waveOut?.Stop();
+                        _waveOut?.Dispose();
+                        _waveOut = null;
+                        _audioFile?.Dispose();
+                        _audioFile = null;
+                        SelectedTrack = null;
+                        _loadedFilePath = string.Empty;
+                        SongTitle = "No track loaded";
+                        ArtistName = "Unknown Artist";
+                        AlbumArt = null;
+                        CurrentTime = TimeSpan.Zero;
+                        TotalTime = TimeSpan.Zero;
+                        IsPlaying = false;
+                    }
+                }
+
                 Playlist.Remove(track);
-                if (SelectedTrack == track)
-                    NextTrack();
+
+                try
+                {
+                    if (File.Exists(track.FilePath))
+                    {
+                        File.Delete(track.FilePath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error deleting file: {ex.Message}");
+                }
             }
         }
     }
