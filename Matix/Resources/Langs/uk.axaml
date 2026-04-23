@@ -7,4 +7,6 @@
     <sys:String x:Key="StrAbout">Про застосунок</sys:String>
     <sys:String x:Key="StrInProgress">В розробці...</sys:String>
     <sys:String x:Key="StrGithubRepo">GitHub Репозиторій</sys:String>
+    <sys:String x:Key="StrChooseFolder">Виберіть папку</sys:String>
+    <sys:String x:Key="StrOpenFile">Відкрити файл</sys:String>
 </ResourceDictionary>

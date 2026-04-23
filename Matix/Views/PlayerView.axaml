@@ -105,7 +105,7 @@
                 <Button Classes="rippleBtn settingsItemBtn" Click="OpenFileButton_Click">
                     <Grid ColumnDefinitions="Auto,*">
                         <materialIcons:MaterialIcon Grid.Column="0" Kind="FileMusicOutline" Width="20" Height="20" Foreground="{DynamicResource PrimaryColor}"/>
-                        <TextBlock Grid.Column="1" Text="Open file" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource StrOpenFile}" Margin="12,0,0,0" VerticalAlignment="Center" Classes="Subtitle"/>
                     </Grid>
                 </Button>
                 <Button Classes="rippleBtn settingsItemBtn" Command="{Binding GoToAboutCommand}">
@@ -140,9 +140,18 @@
                 <Grid RowDefinitions="*, Auto" Margin="104,24,0,24" Width="280">
                     <controls:Card Grid.Row="0" Margin="0,0,0,24" Padding="8" CornerRadius="16"
                                    Background="{DynamicResource PrimaryContainer}">
-                        <ListBox ItemsSource="{Binding Playlist}" SelectedItem="{Binding SelectedTrack}"
-                                 Background="Transparent" BorderThickness="0" CornerRadius="16" x:Name="PlaylistListBox"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <Panel>
+                            <TextBlock Text="{DynamicResource StrChooseFolder}"
+                                       IsVisible="{Binding !Playlist.Count}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Opacity="0.5"
+                                       Classes="Subtitle"
+                                       Margin="16"
+                                       TextAlignment="Center"/>
+                            <ListBox ItemsSource="{Binding Playlist}" SelectedItem="{Binding SelectedTrack}"
+                                     Background="Transparent" BorderThickness="0" CornerRadius="16" x:Name="PlaylistListBox"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid ColumnDefinitions="Auto, *, Auto" Margin="0,4" Background="Transparent">
@@ -152,18 +161,24 @@
                                                 <Image Source="{Binding AlbumArt}" Stretch="UniformToFill" IsVisible="{Binding HasAlbumArt}"/>
                                             </Panel>
                                         </Border>
-                                        <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Classes="Subtitle" TextTrimming="CharacterEllipsis" FontSize="13" Margin="0,0,8,0"/>
-                                        <controls:Card Grid.Column="2" Width="32" Height="32" CornerRadius="8" Padding="0" Background="{DynamicResource PrimaryContainer}" ZIndex="2">
-                                            <Button Classes="rippleBtn" Width="32" Height="32" CornerRadius="8"
-                                                    Command="{Binding $parent[UserControl].((vm:PlayerViewModel)DataContext).RemoveTrackCommand}"
-                                                    CommandParameter="{Binding}">
-                                                <materialIcons:MaterialIcon Kind="TrashCanOutline" Width="16" Height="16"/>
-                                            </Button>
-                                        </controls:Card>
+                                        <Panel Grid.Column="1">
+                                            <TextBlock Text="{Binding Title}" VerticalAlignment="Center" Classes="Subtitle" 
+                                                       TextTrimming="CharacterEllipsis" FontSize="13" Margin="0,0,8,0"/>
+                                        </Panel>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                                            <controls:Card Width="32" Height="32" CornerRadius="8" Padding="0" Background="{DynamicResource PrimaryContainer}" ZIndex="2">
+                                                <Button Classes="rippleBtn" Width="32" Height="32" CornerRadius="8"
+                                                        Command="{Binding $parent[UserControl].((vm:PlayerViewModel)DataContext).RemoveTrackCommand}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialIcons:MaterialIcon Kind="TrashCanOutline" Width="16" Height="16"/>
+                                                </Button>
+                                            </controls:Card>
+                                        </StackPanel>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+                        </Panel>
                     </controls:Card>
 
                     <controls:Card Grid.Row="1" Padding="0" CornerRadius="16" Background="{DynamicResource PrimaryContainer}">

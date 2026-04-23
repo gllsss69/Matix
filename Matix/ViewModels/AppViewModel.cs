@@ -4,7 +4,7 @@ using Matix.Commands;
 namespace Matix.ViewModels
 {
     /// <summary>
-    /// Root ViewModel. Manages navigation between pages.
+    /// Кореневий ViewModel. Керує навігацією між сторінками.
     /// </summary>
     public class AppViewModel : ViewModelBase
     {
@@ -18,6 +18,9 @@ namespace Matix.ViewModels
 
         public PlayerViewModel Player { get; }
 
+        /// <summary>
+        /// Ініціалізує новий екземпляр класу AppViewModel. Налаштовує плеєр та початкову сторінку.
+        /// </summary>
         public AppViewModel()
         {
             Player = new PlayerViewModel(NavigateTo);
@@ -33,12 +36,31 @@ namespace Matix.ViewModels
 
         public double AppMinWidth => Player.IsPlaylistOpen ? 1100 : 800;
 
+        /// <summary>
+        /// Переходить на вказану сторінку.
+        /// </summary>
+        /// <param name="page">Модель представлення сторінки для переходу.</param>
         public void NavigateTo(ViewModelBase page) => CurrentPage = page;
 
+        /// <summary>
+        /// Переходить на головну сторінку плеєра.
+        /// </summary>
         public void NavigateToPlayer()  => CurrentPage = Player;
+        /// <summary>
+        /// Переходить на сторінку "Про програму".
+        /// </summary>
         public void NavigateToAbout()   => CurrentPage = new AboutViewModel(NavigateToPlayer);
+        /// <summary>
+        /// Переходить на сторінку вибору мови.
+        /// </summary>
         public void NavigateToLanguage()=> CurrentPage = new LanguageViewModel(NavigateToPlayer);
+        /// <summary>
+        /// Переходить на сторінку налаштування якості.
+        /// </summary>
         public void NavigateToQuality() => CurrentPage = new QualityViewModel(NavigateToPlayer);
+        /// <summary>
+        /// Переходить на сторінку вибору теми.
+        /// </summary>
         public void NavigateToTheme()   => CurrentPage = new ThemeViewModel(NavigateToPlayer);
     }
 }

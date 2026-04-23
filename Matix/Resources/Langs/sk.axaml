@@ -7,4 +7,6 @@
     <sys:String x:Key="StrAbout">O aplikácii</sys:String>
     <sys:String x:Key="StrInProgress">Prebieha...</sys:String>
     <sys:String x:Key="StrGithubRepo">Repozitár GitHub</sys:String>
+    <sys:String x:Key="StrChooseFolder">Vybrať priečinok</sys:String>
+    <sys:String x:Key="StrOpenFile">Otvoriť súbor</sys:String>
 </ResourceDictionary>

@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace Matix.ViewModels
 {
+    /// <summary>
+    /// Модель представлення для програвача. Керує відтворенням, списком відтворення та налаштуваннями.
+    /// </summary>
     public class PlayerViewModel : ViewModelBase
     {
         // Navigation 
@@ -165,7 +168,7 @@ namespace Matix.ViewModels
         public Thickness ProgressThumbMargin => new(ProgressWidth, 0, 0, 0);
 
         // Volume
-        private double _volume = 50;
+        private double _volume = App.Settings.Volume;
         public double Volume
         {
             get => _volume;
@@ -178,6 +181,8 @@ namespace Matix.ViewModels
                 OnPropertyChanged(nameof(VolumeThumbMargin));
                 OnPropertyChanged(nameof(VolumeBadgeMargin));
                 if (_waveOut != null) _waveOut.Volume = (float)(_volume / 100.0);
+                App.Settings.Volume = _volume;
+                App.Settings.Save();
             }
         }
         public string    VolumeText        => Math.Round(Volume).ToString();
@@ -199,6 +204,10 @@ namespace Matix.ViewModels
         private readonly DispatcherTimer _timer;
 
        
+        /// <summary>
+        /// Ініціалізує новий екземпляр класу PlayerViewModel.
+        /// </summary>
+        /// <param name="navigateTo">Дія для навігації між моделями представлення.</param>
         public PlayerViewModel(Action<ViewModelBase> navigateTo)
         {
             _navigateTo = navigateTo;
@@ -250,6 +259,10 @@ namespace Matix.ViewModels
             }
         }
 
+        /// <summary>
+        /// Завантажує аудіофайли з вказаної папки до списку відтворення.
+        /// </summary>
+        /// <param name="folderPath">Шлях до папки з музикою.</param>
         public void LoadFolder(string folderPath)
         {
             if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath)) return;
@@ -292,9 +305,16 @@ namespace Matix.ViewModels
             }
         }
 
-        private void GoBack() => _navigateTo(this);  // navigate back to player
+        /// <summary>
+        /// Повертає користувача до головного екрана програвача.
+        /// </summary>
+        private void GoBack() => _navigateTo(this);
 
         // Audio loading
+        /// <summary>
+        /// Завантажує та готує до відтворення вказаний аудіофайл.
+        /// </summary>
+        /// <param name="filePath">Шлях до аудіофайлу.</param>
         public void LoadAudio(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath)) return;
@@ -348,6 +368,9 @@ namespace Matix.ViewModels
         }
 
         // Playback logic
+        /// <summary>
+        /// Перемикає стан відтворення (відтворення/пауза).
+        /// </summary>
         private void TogglePlay()
         {
             if (_waveOut == null) return;
@@ -356,6 +379,9 @@ namespace Matix.ViewModels
             else { _waveOut.Pause(); _timer.Stop();  }
         }
 
+        /// <summary>
+        /// Переходить до наступного треку в списку відтворення.
+        /// </summary>
         private void NextTrack()
         {
             if (Playlist.Count == 0) return;
@@ -382,6 +408,9 @@ namespace Matix.ViewModels
             }
         }
 
+        /// <summary>
+        /// Переходить до попереднього треку або на початок поточного.
+        /// </summary>
         private void PrevTrack()
         {
             if (Playlist.Count == 0) return;
@@ -412,6 +441,10 @@ namespace Matix.ViewModels
             }
         }
 
+        /// <summary>
+        /// Видаляє вказаний трек зі списку відтворення.
+        /// </summary>
+        /// <param name="param">Об'єкт треку для видалення.</param>
         private void RemoveTrack(object? param)
         {
             if (param is Track track)

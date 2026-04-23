@@ -7,4 +7,6 @@
     <sys:String x:Key="StrAbout">アプリについて</sys:String>
     <sys:String x:Key="StrInProgress">開発中...</sys:String>
     <sys:String x:Key="StrGithubRepo">GitHubリポジトリ</sys:String>
+    <sys:String x:Key="StrChooseFolder">フォルダを選択</sys:String>
+    <sys:String x:Key="StrOpenFile">ファイルを開く</sys:String>
 </ResourceDictionary>

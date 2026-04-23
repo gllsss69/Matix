@@ -7,4 +7,6 @@
     <sys:String x:Key="StrAbout">Über</sys:String>
     <sys:String x:Key="StrInProgress">In Bearbeitung...</sys:String>
     <sys:String x:Key="StrGithubRepo">GitHub-Repository</sys:String>
+    <sys:String x:Key="StrChooseFolder">Wählen Sie einen Ordner</sys:String>
+    <sys:String x:Key="StrOpenFile">Datei öffnen</sys:String>
 </ResourceDictionary>

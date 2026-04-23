@@ -10,6 +10,9 @@ namespace Matix.Views
 {
     public partial class PlayerView : UserControl
     {
+        /// <summary>
+        /// Конструктор класу PlayerView. Ініціалізує компоненти представлення.
+        /// </summary>
         public PlayerView()
         {
             InitializeComponent();
@@ -17,11 +20,21 @@ namespace Matix.Views
 
         private PlayerViewModel? VM => DataContext as PlayerViewModel;
 
+        /// <summary>
+        /// Обробник події натискання для закриття панелі налаштувань.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події вказівника.</param>
         private void CloseSettings_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
             if (VM is { } vm) vm.IsSettingsOpen = false;
         }
 
+        /// <summary>
+        /// Обробник події натискання кнопки для відкриття аудіофайлу.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події маршрутизації.</param>
         private async void OpenFileButton_Click(object? sender, RoutedEventArgs e)
         {
             if (VM is { } vmOpen) vmOpen.IsSettingsOpen = false;
@@ -53,6 +66,11 @@ namespace Matix.Views
             }
         }
 
+        /// <summary>
+        /// Обробник події натискання кнопки для вибору папки з музикою.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події маршрутизації.</param>
         private async void OpenFolderButton_Click(object? sender, RoutedEventArgs e)
         {
             var topLevel = TopLevel.GetTopLevel(this);
@@ -68,6 +86,11 @@ namespace Matix.Views
                 vm.LoadFolder(folders[0].Path.LocalPath);
         }
 
+        /// <summary>
+        /// Оновлює прогрес відтворення на основі положення вказівника.
+        /// </summary>
+        /// <param name="e">Аргументи події вказівника.</param>
+        /// <param name="relativeTo">Візуальний елемент, відносно якого розраховуються координати.</param>
         private void UpdateProgress(PointerEventArgs e, Visual relativeTo)
         {
             if (VM is not { } vm) return;
@@ -79,11 +102,26 @@ namespace Matix.Views
             }
         }
 
+        /// <summary>
+        /// Обробник переміщення вказівника по сітці прогресу.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події вказівника.</param>
         private void ProgressGrid_PointerMoved(object? sender, PointerEventArgs e)
             => UpdateProgress(e, (Visual)sender!);
+        /// <summary>
+        /// Обробник натискання вказівника на сітці прогресу.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події вказівника.</param>
         private void ProgressGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
             => UpdateProgress(e, (Visual)sender!);
 
+        /// <summary>
+        /// Оновлює рівень гучності на основі положення вказівника.
+        /// </summary>
+        /// <param name="e">Аргументи події вказівника.</param>
+        /// <param name="relativeTo">Візуальний елемент, відносно якого розраховуються координати.</param>
         private void UpdateVolume(PointerEventArgs e, Visual relativeTo)
         {
             if (VM is not { } vm) return;
@@ -95,17 +133,37 @@ namespace Matix.Views
             }
         }
 
+        /// <summary>
+        /// Обробник переміщення вказівника по сітці гучності.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події вказівника.</param>
         private void VolumeGrid_PointerMoved(object? sender, PointerEventArgs e)
             => UpdateVolume(e, (Visual)sender!);
+        /// <summary>
+        /// Обробник натискання вказівника на сітці гучності.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події вказівника.</param>
         private void VolumeGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
             => UpdateVolume(e, (Visual)sender!);
 
+        /// <summary>
+        /// Обробник зміни розміру сітки треку прогресу. Оновлює максимальну ширину в моделі представлення.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події зміни розміру.</param>
         private void ProgressTrackGrid_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             if (VM is { } vm && e.NewSize.Width > 0)
                 vm.MaxProgressWidth = e.NewSize.Width;
         }
 
+        /// <summary>
+        /// Обробник зміни розміру сітки треку гучності. Оновлює максимальну ширину гучності в моделі представлення.
+        /// </summary>
+        /// <param name="sender">Джерело події.</param>
+        /// <param name="e">Аргументи події зміни розміру.</param>
         private void VolumeTrackGrid_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             if (VM is { } vm && e.NewSize.Width > 0)

@@ -33,6 +33,10 @@ namespace Matix.ViewModels
 
         public ICommand GoBackCommand { get; }
 
+        /// <summary>
+        /// Ініціалізує новий екземпляр класу LanguageViewModel.
+        /// </summary>
+        /// <param name="goBack">Дія для повернення до попереднього екрана.</param>
         public LanguageViewModel(System.Action goBack)
         {
             GoBackCommand = new RelayCommand(goBack);

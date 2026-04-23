@@ -27,6 +27,10 @@ namespace Matix.ViewModels
 
         public ICommand GoBackCommand { get; }
 
+        /// <summary>
+        /// Ініціалізує новий екземпляр класу ThemeViewModel.
+        /// </summary>
+        /// <param name="goBack">Дія для повернення до попереднього екрана.</param>
         public ThemeViewModel(System.Action goBack)
         {
             _selectedTheme = App.Settings.Theme;

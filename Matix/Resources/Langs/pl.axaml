@@ -7,4 +7,6 @@
     <sys:String x:Key="StrAbout">O aplikacji</sys:String>
     <sys:String x:Key="StrInProgress">W toku...</sys:String>
     <sys:String x:Key="StrGithubRepo">Repozytorium GitHub</sys:String>
+    <sys:String x:Key="StrChooseFolder">Wybierz folder</sys:String>
+    <sys:String x:Key="StrOpenFile">Otwórz plik</sys:String>
 </ResourceDictionary>

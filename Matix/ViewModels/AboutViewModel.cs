@@ -14,6 +14,10 @@ namespace Matix.ViewModels
         public ICommand GoBackCommand { get; }
         public ICommand OpenGitHubCommand { get; }
 
+        /// <summary>
+        /// Ініціалізує новий екземпляр класу AboutViewModel.
+        /// </summary>
+        /// <param name="goBack">Дія для повернення до попереднього екрана.</param>
         public AboutViewModel(System.Action goBack)
         {
             GoBackCommand = new RelayCommand(goBack);
