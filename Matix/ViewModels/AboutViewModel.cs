@@ -7,7 +7,7 @@ namespace Matix.ViewModels
     public class AboutViewModel : ViewModelBase
     {
         public string AppName => "Matix Player";
-        public string Version => "Version 1.0.0";
+        public string Version => "Version 1.0.1";
         public string Description => "A beautiful Material Design 3 audio player.";
         public string Tech => "Created with Avalonia UI and NAudio.";
 
