@@ -1,16 +1,16 @@
-﻿# Matix Music Player 🎵
+# Matix Music Player 🎵
 
 **Matix** is a modern, lightweight, and cross-platform desktop audio player built with **C#** and **Avalonia UI**. Designed with **Material Design 3** principles, it offers a sleek and intuitive user experience for managing and listening to your local music library on both Windows and Linux.
 
 
 [![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-[![Avalonia](https://img.shields.io/badge/Avalonia-11.0-red.svg)](https://avaloniaui.net/)
+[![Avalonia](https://img.shields.io/badge/Avalonia-11.3-red.svg)](https://avaloniaui.net/)
 
 ## ✨ Features
 
--   **Cross-Platform**: Seamless performance on Windows and Linux distributions (Arch Linux, Fedora, etc.).
+-   **Cross-Platform**: Seamless performance on Windows and Linux distributions.
 -   **Material Design 3**: A beautiful, modern interface with support for dynamic themes and accent colors.
--   **High-Quality Audio**: Powered by the **NAudio** engine for stable and clear sound reproduction.
+-   **High-Quality Audio**: Powered by the **LibVLCSharp** engine for stable and broad format support.
 -   **Metadata Management**: Automatic reading of track titles, artists, and album art using **TagLib#**.
 -   **Localization**: Full support for multiple languages (English, Ukrainian) with instant switching.
 -   **Performance**: Asynchronous file loading and low system resource consumption.
@@ -19,7 +19,7 @@
 
 -   **Framework**: [Avalonia UI](https://avaloniaui.net/) (MVVM Pattern)
 -   **Runtime**: [.NET 9.0](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
--   **Audio Engine**: [NAudio](https://github.com/naudio/NAudio)
+-   **Audio Engine**: [LibVLCSharp](https://github.com/videolan/libvlcsharp)
 -   **Tagging Library**: [TagLib#](https://github.com/mono/taglib-sharp)
 -   **UI Styles**: [Material.Avalonia](https://github.com/AvaloniaCommunity/material.avalonia)
 
@@ -33,6 +33,7 @@
 
 ### Prerequisites
 -   [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+-   **VLC Player** (For Linux users Debian/Ubuntu: `sudo apt install vlc`, Arch: `sudo pacman -S vlc`)
 
 ### Installation & Run
 1.  **Clone the repository:**

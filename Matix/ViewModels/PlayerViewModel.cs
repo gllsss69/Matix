@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Matix.Commands;
 using Matix.Models;
-using NAudio.Wave;
+using LibVLCSharp.Shared;
 using System.Threading.Tasks;
 
 namespace Matix.ViewModels
@@ -120,8 +120,8 @@ namespace Matix.ViewModels
                 OnPropertyChanged(nameof(ProgressWidth));
                 OnPropertyChanged(nameof(ProgressThumbMargin));
 
-                if (_audioFile != null && Math.Abs(_audioFile.CurrentTime.TotalSeconds - value.TotalSeconds) > 0.5)
-                    _audioFile.CurrentTime = value;
+                if (_mediaPlayer != null && Math.Abs((_mediaPlayer.Time / 1000.0) - value.TotalSeconds) > 0.5)
+                    _mediaPlayer.Time = (long)(value.TotalSeconds * 1000);
             }
         }
 
@@ -180,7 +180,7 @@ namespace Matix.ViewModels
                 OnPropertyChanged(nameof(VolumeWidth));
                 OnPropertyChanged(nameof(VolumeThumbMargin));
                 OnPropertyChanged(nameof(VolumeBadgeMargin));
-                if (_waveOut != null) _waveOut.Volume = (float)(_volume / 100.0);
+                if (_mediaPlayer != null) _mediaPlayer.Volume = (int)_volume;
                 App.Settings.Volume = _volume;
                 App.Settings.Save();
             }
@@ -198,9 +198,9 @@ namespace Matix.ViewModels
         public ICommand PrevCommand { get; }
         public ICommand ToggleRepeatCommand { get; }
 
-        // NAudio
-        private WaveOutEvent? _waveOut;
-        private AudioFileReader? _audioFile;
+        // LibVLCSharp
+        private readonly LibVLC _libVLC;
+        private readonly MediaPlayer _mediaPlayer;
         private readonly DispatcherTimer _timer;
 
        
@@ -229,20 +229,23 @@ namespace Matix.ViewModels
             RemoveTrackCommand = new RelayCommand<Track>(RemoveTrack);
             ToggleShuffleCommand = new RelayCommand(() => IsShuffleEnabled = !IsShuffleEnabled);
 
+            // LibVLCSharp
+            _libVLC = new LibVLC();
+            _mediaPlayer = new MediaPlayer(_libVLC);
+
             // Timer
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200) };
             _timer.Tick += (_, _) =>
             {
-                if (IsPlaying && _audioFile != null)
+                if (IsPlaying && _mediaPlayer != null)
                 {
-                    CurrentTime = _audioFile.CurrentTime;
-                    if (_waveOut?.PlaybackState == PlaybackState.Stopped)
+                    CurrentTime = TimeSpan.FromMilliseconds(_mediaPlayer.Time);
+                    if (_mediaPlayer.State == VLCState.Ended)
                     {
                         if (IsRepeatEnabled)
                         {
-                            _audioFile.Position = 0;
-                            CurrentTime = TimeSpan.Zero;
-                            _waveOut.Play();
+                            _mediaPlayer.Stop();
+                            _mediaPlayer.Play();
                         }
                         else
                         {
@@ -319,19 +322,27 @@ namespace Matix.ViewModels
         {
             if (string.IsNullOrWhiteSpace(filePath)) return;
             
-            _waveOut?.Stop();
-            _waveOut?.Dispose();
-            _audioFile?.Dispose();
+            _mediaPlayer.Stop();
+            if (_mediaPlayer.Media != null)
+            {
+                _mediaPlayer.Media.Dispose();
+            }
 
             try
             {
                 _loadedFilePath = filePath;
-                _audioFile = new AudioFileReader(filePath);
-                _waveOut = new WaveOutEvent();
-                _waveOut.Init(_audioFile);
-                _waveOut.Volume = (float)(Volume / 100.0);
+                var media = new Media(_libVLC, filePath, FromType.FromPath);
+                
+                // Track metadata loading may take a moment, but we can set it up
+                media.AddOption(":no-video"); // For audio files
+                _mediaPlayer.Media = media;
+                _mediaPlayer.Volume = (int)Volume;
 
-                TotalTime = _audioFile.TotalTime;
+                // Sync TotalTime - note: Length is only available after media starts or is parsed
+                // For simplicity, we'll wait for the media to be parsed or use TagLib for duration
+                media.Parse(MediaParseOptions.ParseLocal).Wait();
+                TotalTime = TimeSpan.FromMilliseconds(media.Duration);
+
                 CurrentTime = TimeSpan.Zero;
                 IsPlaying = false;
 
@@ -373,10 +384,10 @@ namespace Matix.ViewModels
         /// </summary>
         private void TogglePlay()
         {
-            if (_waveOut == null) return;
+            if (_mediaPlayer == null) return;
             IsPlaying = !IsPlaying;
-            if (IsPlaying) { _waveOut.Play();  _timer.Start(); }
-            else { _waveOut.Pause(); _timer.Stop();  }
+            if (IsPlaying) { _mediaPlayer.Play();  _timer.Start(); }
+            else { _mediaPlayer.Pause(); _timer.Stop();  }
         }
 
         /// <summary>
@@ -459,12 +470,10 @@ namespace Matix.ViewModels
                     }
                     else
                     {
-                        // Stop and dispose audio to release file lock
-                        _waveOut?.Stop();
-                        _waveOut?.Dispose();
-                        _waveOut = null;
-                        _audioFile?.Dispose();
-                        _audioFile = null;
+                        // Stop and dispose audio
+                        _mediaPlayer.Stop();
+                        if (_mediaPlayer.Media != null) _mediaPlayer.Media.Dispose();
+                        _mediaPlayer.Media = null;
                         SelectedTrack = null;
                         _loadedFilePath = string.Empty;
                         SongTitle = "No track loaded";
